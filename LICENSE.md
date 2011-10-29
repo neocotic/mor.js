@@ -1,4 +1,4 @@
-mor.js, Pure JavaScript library for encoding/decoding morse code
+mor.js, Pure JavaScript library for encoding/decoding morse code  
 Copyright (C) 2011 Alasdair Mercer
 
 This program is free software: you can redistribute it and/or modify
