@@ -120,6 +120,15 @@ var MorJS = (function () {
         return true;
     }
 
+    function getChar(str) {
+        var i = 0;
+        for (; i < chars.length; i++) {
+            if (chars[i][0] === str.toUpperCase()) {
+                return chars[i];
+            }
+        }
+    }
+
     function getMode(name) {
         var mode;
         if (typeof name === 'string') {
@@ -128,9 +137,28 @@ var MorJS = (function () {
         return mode || getMode(defaultMode);
     }
 
+    function parsePattern(pattern, mode) {
+        var i = 0,
+            str = '';
+        for (; i < pattern.length; i++) {
+            if (i > 0) {
+                str += mode[2];
+            }
+            switch (pattern[i]) {
+            case 'S':
+                str += mode[0];
+                break;
+            case 'L':
+                str += mode[1];
+                break;
+            }
+        }
+        return str;
+    }
+
     function prepare(str) {
-        var i, ret = str.trim().split(/\s+/); // Splits words
-        for (i = 0; i < ret.length; i++) {
+        var i = 0, ret = str.trim().split(/\s+/); // Splits words
+        for (; i < ret.length; i++) {
             ret[i] = ret[i].split(''); // Splits characters
         }
         // Returns multi-dimensional array ([word][char])
@@ -138,8 +166,8 @@ var MorJS = (function () {
     }
 
     function repeat(str, repeat) {
-        var i, ret = str;
-        for (i = 0; i < repeat; i++) {
+        var i = 0, ret = '';
+        for (; i < repeat; i++) {
             ret += str;
         }
         return ret;
@@ -169,9 +197,10 @@ var MorJS = (function () {
 
     return {
 
-        decode: function (str, mode) {
-            var ret = '';
-            mode = getMode(mode);
+        decode: function (data) {
+            var mode = getMode(data.mode),
+                ret = '',
+                value = data.value;
             // TODO
             return ret;
         },
@@ -188,10 +217,28 @@ var MorJS = (function () {
             return false;
         },
 
-        encode: function (str, mode) {
-            var ret = '';
-            mode = getMode(mode);
-            // TODO
+        encode: function (data) {
+            var char,
+                i, j,
+                mode = getMode(data.mode),
+                ret = '',
+                value = prepare(data.value);
+            if (value.length) {
+                for (i = 0; i < value.length; i++) {
+                    if (i > 0) {
+                        ret += mode[4];
+                    }
+                    for (j = 0; j < value[i].length; j++) {
+                        if (j > 0) {
+                            ret += mode[3];
+                        }
+                        char = getChar(value[i][j]);
+                        if (char) {
+                            ret += parsePattern(char[1], mode);
+                        }
+                    }
+                }
+            }
             return ret;
         }
 
