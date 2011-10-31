@@ -6,8 +6,26 @@
  * Licensed under the GPL Version 3 license.
  */
 
+/*jslint
+    sloppy: true, vars: true, plusplus: true, maxerr: 50, maxlen: 80, indent: 4
+*/
+
+/**
+ * <p>Pure JavaScript library for encoding/decoding morse code.</p>
+ * <p>The predefined supported characters are based on the International
+ * Telecommunication Union (ITU).</p>
+ * @author <a href="http://github.com/neocotic">Alasdair Mercer</a>
+ * @version 1.0.0
+ * @namespace
+ */
 var MorJS = (function () {
 
+    /**
+     * <p>The mapping of morse code patterns to supported characters.</p>
+     * <p>This is a multi-dimensional array and should be treated as such.</p>
+     * @private
+     * @type Array[]
+     */
     var chars = [
             /* Letters */
             ['\u0041', 'SL'],      // A
@@ -68,7 +86,7 @@ var MorJS = (function () {
             ['\u0040', 'SLLSLS'],  // At sign
             /* Non-English extensions */
             ['\u00C4', 'SLSL'],    // A with diaeresis
-            ['\u00C6', 'SLSL'],    // Æ
+            ['\u00C6', 'SLSL'],    // Ã†
             ['\u0104', 'SLSL'],    // A with ogonek
             ['\u00C0', 'SLLSL'],   // A with grave
             ['\u00C5', 'SLLSL'],   // A with ring above
@@ -98,143 +116,395 @@ var MorJS = (function () {
             ['\u016C', 'SSLL'],    // U with breve
             ['\u017B', 'LLSSL']    // Z with dot above
         ],
-        defaultMode = 'classic',
-        /*
-         * Mode array order;
-         * 
-         * 0: Short mark (dot)
-         * 1: Longer mark (dash)
-         * 2: Intra-character gap (between dots and dashes within a character)
-         * 3: Short gap (between letters)
-         * 4: Medium gap (between words)
+
+        /**
+         * <p>The name of the mode to be used if none is specified or could not
+         * be found.</p>
+         * @private
+         * @type String
          */
-        modes = {};
+        defaultMode = 'classic',
 
-    function defineChar(value, pattern) {
-        chars.push([value.toUpperCase(), pattern]);
-        return true;
-    }
+        /**
+         * <p>The pattern placeholder for longer marks.</p>
+         * @private
+         * @type String
+         */
+        LONG = 'L',
 
-    function defineMode(name, chars) {
-        modes[name.toLowerCase()] = chars;
-        return true;
-    }
+        /**
+         * <p>The supported mode mappings used to encode/decode messages.</p>
+         * <p>This is a multi-dimensional array and should be treated as
+         * such.</p>
+         * @private
+         * @type Array[]
+         */
+        modes = [],
 
-    function getChar(str) {
-        var i = 0;
-        for (; i < chars.length; i++) {
-            if (chars[i][0] === str.toUpperCase()) {
+        /**
+         * <p>The pattern placeholder for short marks.</p>
+         * @private
+         * @type String
+         */
+        SHORT = 'S';
+
+    /**
+     * <p>Attempts to find a character mapping that matches the query
+     * provided.</p>
+     * @param {String} query The query string to be matched.
+     * @param {Integer} index The index of the character mapping to be queried.
+     * @returns {String[]} The character mapping matching the query or
+     * <code>undefined</code> if none was found.
+     * @private
+     */
+    function findChar(query, index) {
+        query = query.toUpperCase();
+        for (var i = 0; i < chars.length; i++) {
+            if (chars[i][index] === query) {
                 return chars[i];
             }
         }
     }
 
-    function getMode(name) {
-        var mode;
+    /**
+     * <p>Attempts to find a mode mapping with the name provided.</p>
+     * <p>As all mode names are stored in lower case the name provided will be
+     * transformed in to lower case before matching.</p>
+     * @param {String} [name] The name of the mode to be retrieved.
+     * @returns {Array} The mode with the matching name or the default mode if
+     * none was found.
+     * @private
+     */
+    function findMode(name) {
+        // Check if mode was specified
         if (typeof name === 'string') {
-            mode = modes[name];
-        }
-        return mode || getMode(defaultMode);
-    }
-
-    function parsePattern(pattern, mode) {
-        var i = 0,
-            str = '';
-        for (; i < pattern.length; i++) {
-            if (i > 0) {
-                str += mode[2];
-            }
-            switch (pattern[i]) {
-            case 'S':
-                str += mode[0];
-                break;
-            case 'L':
-                str += mode[1];
-                break;
+            name = name.toLowerCase();
+            for (var i = 0; i < modes.length; i++) {
+                if (modes[i][0] === name) {
+                    return modes[i];
+                }
             }
         }
-        return str;
+        // No mode found or specified; Just use the default then
+        return findMode(defaultMode);
     }
 
-    function prepare(str) {
-        var i = 0, ret = str.trim().split(/\s+/); // Splits words
-        for (; i < ret.length; i++) {
-            ret[i] = ret[i].split(''); // Splits characters
+    /**
+     * <p>Parses the string provided by replacing any instances of the queries
+     * with the corresponding strings.</p>
+     * @param {String} str The string to be parsed.
+     * @param {String} query1 The 1st query to be replaced.
+     * @param {String} replacement1 The replacement string for the 1st query.
+     * @param {String} query2 The 2nd query to be replaced.
+     * @param {String} replacement2 The replacement string for the 2nd query.
+     * @param {String} [spacer] The optional spacer to be inserted between each
+     * character.
+     * @returns {String} The parsed string.
+     * @private
+     */
+    function parse(str, query1, replacement1, query2, replacement2, spacer) {
+        var hasSpacer = typeof spacer === 'string',
+            ret = '';
+        for (var i = 0; i < str.length; i++) {
+            // Insert spacer if provided and not first loop
+            if (hasSpacer && i > 0) {
+                ret += spacer;
+            }
+            // Perform string replacements
+            switch (str[i]) {
+            case query1:
+                ret += replacement1;
+                break;
+            case query2:
+                ret += replacement2;
+                break;
+            }
         }
-        // Returns multi-dimensional array ([word][char])
         return ret;
     }
 
-    function repeat(str, repeat) {
-        var i = 0, ret = '';
-        for (; i < repeat; i++) {
+    /**
+     * <p>Prepares the message to so that it can be easily encoded/decoded.</p>
+     * <p>The returned value is a multi-dimensional array and should be treated
+     * as such.</p>
+     * @param {String} str The user-defined message.
+     * @param {RegExp|String} wordSplitter The selector to be used to separate
+     * words.
+     * @param {RegExp|String} letterSplitter The selector to be used to
+     * separate letters.
+     * @param {RegExp|String} [charSplitter] The optional selector to be used
+     * to separate intra-characters (used only when decoding).
+     * @returns {Array} The character to word mapping ([word][char]).
+     * @throws {TypeError} If <code>str</code> is not a string.
+     * @private
+     */
+    function prepare(str, wordSplitter, letterSplitter, charSplitter) {
+        if (typeof str !== 'string') {
+            throw new TypeError('Invalid value type: ' + typeof str);
+        }
+        var hasCharSplitter = typeof charSplitter === 'string',
+            // Splits words
+            ret = str.trim().split(wordSplitter);
+        for (var i = 0; i < ret.length; i++) {
+            // Splits letters
+            ret[i] = ret[i].split(letterSplitter);
+            // Check if character separator was specified
+            if (hasCharSplitter) {
+                for (var j = 0; j < ret[i].length; j++) {
+                    // Splits characters
+                    ret[i][j] = ret[i][j].split(charSplitter).join('');
+                }
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * <p>Repeats the string provided for the specified number of times.</p>
+     * @param {String} str The string to be repeated.
+     * @param {Integer} num The number of times to repeat the string.
+     * @returns {String} The repeated string.
+     * @private
+     */
+    function repeat(str, num) {
+        var ret = '';
+        for (var i = 0; i < num; i++) {
             ret += str;
         }
         return ret;
     }
 
-    defineMode('classic', [
-        '\u00B7',            // Middle dot
-        '\u002D',            // Hyphen-minus
-        '\u0020',            // Space
-        repeat('\u0020', 3), // Space (x3)
-        repeat('\u0020', 7)  // Space (x7)
+    // Add some predefined modes
+    modes.push(['classic', [
+            '\u00B7',            // Middle dot
+            '\u002D',            // Hyphen-minus
+            '\u0020',            // Space
+            repeat('\u0020', 3), // Space (x3)
+            repeat('\u0020', 7)  // Space (x7)
+        ]
     ]);
-    defineMode('digital', [
-        '\u0031',            // 1
-        repeat('\u0031', 3), // 1 (x3)
-        '\u0030',            // 0
-        repeat('\u0030', 3), // 0 (x3)
-        repeat('\u0030', 7)  // 0 (x7)
+    modes.push(['digital', [
+            '\u0031',            // 1
+            repeat('\u0031', 3), // 1 (x3)
+            '\u0030',            // 0
+            repeat('\u0030', 3), // 0 (x3)
+            repeat('\u0030', 7)  // 0 (x7)
+        ]
     ]);
-    defineMode('simple', [
-        '\u0030',            // 0
-        '\u0031',            // 1
-        '',                  // Nothing
-        '\u002C',            // Comma
-        '\u0020'             // Space
+    modes.push(['simple', [
+            '\u0030',            // 0
+            '\u0031',            // 1
+            '',                  // Nothing
+            '\u002C',            // Comma
+            '\u0020'             // Space
+        ]
     ]);
 
+    // Return the API to be exposed
     return {
 
+        /**
+         * <p>Decodes the morse code provided in to a human-readable
+         * message.</p>
+         * <p>The message will not be decoded correctly if the mode used to
+         * decode the message is not the same as that used to encode it.</p>
+         * <p>If no mode is specified then the default mode will be used.</p>
+         * @param {Object} data The information for decoding.
+         * @param {String} data.message The string to be decoded.
+         * @param {String} [data.mode] The name of the mode to be used to
+         * decode the message.
+         * @returns {String} The decoded message.
+         * @public
+         */
         decode: function (data) {
-            var mode = getMode(data.mode),
+            data = data || {};
+            var mode = findMode(data.mode)[1],
                 ret = '',
-                value = data.value;
-            // TODO
+                value = prepare(data.message || '', mode[4], mode[3], mode[2]);
+            // Check message was prepared
+            if (value.length) {
+                // Iterate over each word
+                for (var i = 0; i < value.length; i++) {
+                    // Insert space between each word
+                    if (i > 0) {
+                        ret += ' ';
+                    }
+                    // Iterate over each character of word
+                    for (var j = 0; j < value[i].length; j++) {
+                        // Reverse engineer pattern for character
+                        var pattern = parse(value[i][j], mode[0], SHORT,
+                                mode[1], LONG);
+                        // Check if pattern could be created
+                        if (pattern) {
+                            // Retrieve first character matching the pattern
+                            var ch = findChar(pattern, 1);
+                            // Check if character is supported
+                            if (ch) {
+                                ret += ch[0];
+                            }
+                        }
+                    }
+                }
+            }
             return ret;
         },
 
-        define: function (key, value) {
-            if (typeof key === 'string') {
-                switch (typeof value) {
-                case 'object':
-                    return defineMode(key, value);
-                case 'string':
-                    return defineChar(key, value);
-                }
+        /**
+         * <p>Maps a new pattern to the character provided.</p>
+         * <p>If a mapping already exists for the specified character, that
+         * mapping will be modified.</p>
+         * @param {String} character The character whose mapping is being
+         * defined. Must be a single character.
+         * @param {String} pattern The pattern to be mapped. Must contain a
+         * combination of only <code>S</code> and <code>L</code> characters.
+         * @throws {Error} If <code>character</code> is contains more than a
+         * single character.
+         * @throws {Error} If <code>pattern</code> doesn't contain at least one
+         * <code>S</code> and <code>L</code> character, or contains any other
+         * character.
+         * @throws {TypeError} If <code>character</code> is not a string.
+         * @throws {TypeError} If <code>pattern</code> is not a string.
+         * @public
+         */
+        defineChar: function (character, pattern) {
+            // Arguments must be strings
+            if (typeof character !== 'string') {
+                throw new TypeError('Invalid character type: ' +
+                        typeof character);
+            } else if (typeof pattern !== 'string') {
+                throw new TypeError('Invalid pattern type: ' +
+                        typeof pattern);
             }
-            return false;
+            // Character must be singular
+            if (character.length > 1) {
+                throw new Error('Invalid character length: ' +
+                        character.length);
+            }
+            // Ensure correct cases are applied
+            var ucCharacter = character.toUpperCase(),
+                ucPattern = pattern.trim().toUpperCase();
+            // Pattern must only contain 'S'/'L' characters and at least one
+            if (!/^[SL]+$/.test(ucPattern)) {
+                throw new Error('Invalid pattern: ' + pattern);
+            }
+            // Update existing character mapping or create new one
+            var existingChar = findChar(ucCharacter, 0);
+            if (existingChar) {
+                existingChar[1] = ucPattern;
+            } else {
+                chars.push([ucCharacter, ucPattern]);
+            }
         },
 
+        /**
+         * <p>Maps new characters to the mode provided.</p>
+         * <p>If a mode already exists for the specified name, that
+         * mode's character mapping will be modified.</p>
+         * <p><code>characters</code> elements must be specified in the
+         * following order;
+         *   <ol start="0">
+         *     <li>Short mark (dot)</li>
+         *     <li>Longer mark (dash)</li>
+         *     <li>Intra-character gap (between dots and dashes within a
+         *     character)</li>
+         *     <li>Short gap (between letters)</li>
+         *     <li>Medium gap (between words)</li>
+         *   </ol>
+         * </p>
+         * @param {String} name The name of the mode whose mapping is being
+         * defined.
+         * @param {String[]} characters The characters to be mapped. Must
+         * contain all required elements. Each element must only be a single
+         * character and cannot contain either <code>S</code> or <code>L</code>
+         * characters.
+         * @throws {Error} If <code>characters</code> doesn't contain all
+         * required characters.
+         * @throws {Error} If a character contains more than just a single
+         * character.
+         * @throws {TypeError} If <code>name</code> is not a string.
+         * @throws {TypeError} If <code>characters</code> is not an array.
+         * @public
+         */
+        defineMode: function (name, characters) {
+            // Name must be a string
+            if (typeof name !== 'string') {
+                throw new TypeError('Invalid name type: ' + typeof name);
+            }
+            // Characters must be an array (type: object)
+            if (typeof characters !== 'object') {
+                throw new TypeError('Invalid characters type: ' +
+                        typeof characters);
+            }
+            // Ensure correct cases are used
+            var lcName = name.toLowerCase(),
+                ucCharacters = [];
+            // Characters must contain each required character
+            if (characters.length !== 5) {
+                throw new Error('Invalid characters length: ' +
+                        characters.length);
+            }
+            // Iterate over each character, validating every time
+            for (var i = 0; i < characters.length; i++) {
+                // Character must be a string
+                if (typeof characters[i] !== 'string') {
+                    throw new Error('Invalid character type at [' + i + ']: ' +
+                            typeof characters[i]);
+                }
+                // Character cannot contain 'S'/'L' characters
+                if (characters[i].indexOf(LONG) !== -1) {
+                    throw new Error('Invalid character found at [' + i +
+                            ']: ' + LONG);
+                } else if (characters[i].indexOf(SHORT) !== -1) {
+                    throw new Error('Invalid character found at [' + i +
+                            ']: ' + SHORT);
+                }
+                // Transform character to upper case
+                ucCharacters.push(characters[i].toUpperCase());
+            }
+            // Update existing mode mapping or create new one
+            var existingMode = findMode(lcName);
+            if (existingMode) {
+                existingMode[1] = ucCharacters;
+            } else {
+                modes.push([lcName, ucCharacters]);
+            }
+        },
+
+        /**
+         * <p>Encodes the message provided in to morse code.</p>
+         * <p>If no mode is specified then the default mode will be used.</p>
+         * @param {Object} data The information for encoding.
+         * @param {String} data.message The string to be encoded.
+         * @param {String} [data.mode] The name of the mode to be used to
+         * encode the message.
+         * @returns {String} The encoded message.
+         * @public
+         */
         encode: function (data) {
-            var char,
-                i, j,
-                mode = getMode(data.mode),
+            data = data || {};
+            var mode = findMode(data.mode)[1],
                 ret = '',
-                value = prepare(data.value);
+                value = prepare(data.message || '', /\s+/, '');
+            // Check message was prepared
             if (value.length) {
-                for (i = 0; i < value.length; i++) {
+                // Iterate over each word
+                for (var i = 0; i < value.length; i++) {
+                    // Insert medium gap between each word
                     if (i > 0) {
                         ret += mode[4];
                     }
-                    for (j = 0; j < value[i].length; j++) {
+                    // Iterate over each character of word
+                    for (var j = 0; j < value[i].length; j++) {
+                        // Insert intra-character gap between each character
                         if (j > 0) {
                             ret += mode[3];
                         }
-                        char = getChar(value[i][j]);
-                        if (char) {
-                            ret += parsePattern(char[1], mode);
+                        // Retrieve first character matching the character
+                        var ch = findChar(value[i][j], 0);
+                        // Check if character is supported and parse pattern
+                        if (ch) {
+                            ret += parse(ch[1], SHORT, mode[0], LONG, mode[1],
+                                    mode[2]);
                         }
                     }
                 }
