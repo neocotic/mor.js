@@ -283,6 +283,14 @@ var MorJS = (function () {
             repeat('\u0020', 7)  // Space (x7)
         ]
     ]);
+    modes.push(['classic-entities', [
+            '&middot;',          // Middle dot
+            '&#45;',             // Hyphen-minus
+            '&nbsp;',            // Non-breaking space
+            repeat('&nbsp;', 3), // Non-breaking space (x3)
+            repeat('&nbsp;', 7)  // Non-breaking space (x7)
+        ]
+    ]);
     modes.push(['digital', [
             '\u0031',            // 1
             repeat('\u0031', 3), // 1 (x3)
