@@ -1,10 +1,41 @@
 # [mor.js](http://forchoon.com/projects/javascript/mor-js/)
 
-A pure JavaScript library for encoding/decoding [Morse code](http://en.wikipedia.org/wiki/Morse_code).
+A pure JavaScript library for encoding/decoding
+[Morse code](http://en.wikipedia.org/wiki/Morse_code).
 
-## Important
+## Standard Usage
 
-This library is in the very early stages and is not yet functional. Be patient!
+### Decode
+
+```
+MorJS.decode(data)
+```
+
+### Encode
+
+```
+MorJS.encode(data)
+```
+
+### Data Object
+
+* *{String}* **message** - The message to be decoded/encoded.
+* *{String}* **[mode]** - Optional: The mode to be used to decode/encode the
+  message.
+
+## Customization
+
+### Define Character
+
+```
+MorJS.defineChar(character, pattern)
+```
+
+### Define Mode
+
+```
+MorJS.defineMode(name, characters)
+```
 
 ## Further Information
 
