@@ -1,7 +1,7 @@
 # [mor.js](http://forchoon.com/projects/javascript/mor-js/)
 
 A pure JavaScript library for encoding/decoding
-[Morse code](http://en.wikipedia.org/wiki/Morse_code).
+[Morse code](http://en.wikipedia.org/wiki/Morse_code) messages.
 
 ## Standard Usage
 
