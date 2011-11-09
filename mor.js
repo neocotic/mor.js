@@ -1,5 +1,5 @@
 /*!
- * mor.js v1.0.0
+ * mor.js v1.0.1
  * http://forchoon.com/projects/javascript/mor-js/
  *
  * Copyright 2011, Alasdair Mercer
@@ -15,7 +15,7 @@
  * <p>The predefined supported characters are based on the International
  * Telecommunication Union (ITU).</p>
  * @author <a href="http://github.com/neocotic">Alasdair Mercer</a>
- * @version 1.0.0
+ * @version 1.0.1
  * @namespace
  */
 var MorJS = (function () {
@@ -518,8 +518,27 @@ var MorJS = (function () {
                 }
             }
             return ret;
-        }
+        },
+
+        /**
+         * <p>The current version of mor.js.</p>
+         * @public
+         * @type String
+         */
+        version: '1.0.1'
 
     };
 
 }());
+
+// Export mor.js for Node.js and CommonJS
+if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+        exports = module.exports = MorJS;
+    }
+    exports.MorJS = MorJS;
+} else if (typeof define === 'function' && define.amd) {
+    define('morjs', function() {
+        return MorJS;
+    });
+}

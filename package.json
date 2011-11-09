@@ -1,0 +1,16 @@
+{
+    "name": "morjs",
+    "description": "Library for encoding/decoding Morse code messages",
+    "version": "1.0.1",
+    "homepage": "http://forchoon.com/projects/javascript/mor-js/",
+    "author": "Alasdair Mercer <mercer.alasdair@gmail.com>",
+    "keywords": ["util"],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/neocotic/mor.js.git"
+    },
+    "main": "mor.js",
+    "ender": "ender.js",
+    "contributors": [],
+    "dependencies": []
+}

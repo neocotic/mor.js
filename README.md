@@ -37,6 +37,12 @@ MorJS.defineChar(character, pattern)
 MorJS.defineMode(name, characters)
 ```
 
+## Properties
+
+```
+MorJS.version
+```
+
 ## Further Information
 
 If you want more information or examples of using this library please visit the
