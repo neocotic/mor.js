@@ -10,15 +10,7 @@
     sloppy: true, vars: true, plusplus: true, maxerr: 50, maxlen: 80, indent: 4
 */
 
-/**
- * <p>Pure JavaScript library for encoding/decoding morse code.</p>
- * <p>The predefined supported characters are based on the International
- * Telecommunication Union (ITU).</p>
- * @author <a href="http://github.com/neocotic">Alasdair Mercer</a>
- * @version 1.0.1
- * @namespace
- */
-var MorJS = (function () {
+(function (root) {
 
     /**
      * <p>The mapping of morse code patterns to supported characters.</p>
@@ -308,8 +300,16 @@ var MorJS = (function () {
         ]
     ]);
 
-    // Return the API to be exposed
-    return {
+    /**
+     * <p>Pure JavaScript library for encoding/decoding morse code.</p>
+     * <p>The predefined supported characters are based on the International
+     * Telecommunication Union (ITU).</p>
+     * @author <a href="http://github.com/neocotic">Alasdair Mercer</a>
+     * @version 1.0.1
+     * @public
+     * @namespace
+     */
+    var MorJS = {
 
         /**
          * <p>Decodes the morse code provided in to a human-readable
@@ -522,6 +522,7 @@ var MorJS = (function () {
 
         /**
          * <p>The current version of mor.js.</p>
+         * @since 1.0.1
          * @public
          * @type String
          */
@@ -529,16 +530,18 @@ var MorJS = (function () {
 
     };
 
-}());
-
-// Export mor.js for Node.js and CommonJS
-if (typeof exports !== 'undefined') {
-    if (typeof module !== 'undefined' && module.exports) {
-        exports = module.exports = MorJS;
+    // Export mor.js for Node.js and CommonJS
+    if (typeof exports !== 'undefined') {
+        if (typeof module !== 'undefined' && module.exports) {
+            exports = module.exports = MorJS;
+        }
+        exports.MorJS = MorJS;
+    } else if (typeof define === 'function' && define.amd) {
+        define('morjs', function() {
+            return MorJS;
+        });
+    } else {
+        root.MorJS = MorJS;
     }
-    exports.MorJS = MorJS;
-} else if (typeof define === 'function' && define.amd) {
-    define('morjs', function() {
-        return MorJS;
-    });
-}
+
+}(this));
