@@ -3,7 +3,14 @@
     "description": "Library for encoding/decoding Morse code messages",
     "version": "1.0.1",
     "homepage": "http://forchoon.com/projects/javascript/mor-js/",
+    "bugs": {
+        "url" : "https://github.com/neocotic/mor.js/issues"
+    },
     "author": "Alasdair Mercer <mercer.alasdair@gmail.com> (http://forchoon.com)",
+    "licenses": [{
+        "type" : "GPLv3",
+        "url" : "https://github.com/neocotic/mor.js/raw/master/LICENSE.md"
+    }],
     "keywords": ["decode", "encode", "fun", "util"],
     "repository": {
         "type": "git",

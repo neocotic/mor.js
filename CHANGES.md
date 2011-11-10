@@ -3,3 +3,5 @@
 * Add support for [Node.js](http://nodejs.org), [CommonJS](http://commonjs.org) and [Ender](http://ender.no.de)
 * Add `VERSION` property to the API
 * Add support for callback methodology
+* Rename `MorJS` global variable to `morjs`
+* Add support for *noConflict* mode

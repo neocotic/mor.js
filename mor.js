@@ -134,6 +134,15 @@
         modes = [],
 
         /**
+         * <p>The previous version of the global <code>morjs</code>
+         * variable.</p>
+         * @since 1.0.1
+         * @private
+         * @type Object
+         */
+        previousMorjs = root.morjs,
+
+        /**
          * <p>The pattern placeholder for short marks.</p>
          * @private
          * @type String
@@ -347,7 +356,7 @@
      * @public
      * @namespace
      */
-    var MorJS = {
+    var morjs = {
 
         /**
          * <p>Decodes the morse code provided in to a human-readable
@@ -596,6 +605,18 @@
         },
 
         /**
+         * <p>Run mor.js in <em>noConflict</em> mode, returning the
+         * <code>morjs</code> variable to its previous owner.</p>
+         * @returns {Object} The <code>morjs</code> object.
+         * @since 1.0.1
+         * @public
+         */
+        noConflict: function() {
+            root.morjs = previousMorjs;
+            return this;
+        },
+
+        /**
          * <p>The current version of mor.js.</p>
          * @since 1.0.1
          * @public
@@ -608,15 +629,15 @@
     // Export mor.js for Node.js and CommonJS
     if (typeof exports !== 'undefined') {
         if (typeof module !== 'undefined' && module.exports) {
-            exports = module.exports = MorJS;
+            exports = module.exports = morjs;
         }
-        exports.MorJS = MorJS;
+        exports.morjs = morjs;
     } else if (typeof define === 'function' && define.amd) {
         define('morjs', function() {
-            return MorJS;
+            return morjs;
         });
     } else {
-        root.MorJS = MorJS;
+        root.morjs = morjs;
     }
 
 }(this));

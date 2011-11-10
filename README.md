@@ -8,13 +8,13 @@ A pure JavaScript library for encoding/decoding
 ### Decode
 
 ```
-MorJS.decode(data[, callback])
+morjs.decode(data[, callback])
 ```
 
 ### Encode
 
 ```
-MorJS.encode(data[, callback])
+morjs.encode(data[, callback])
 ```
 
 ### Data Object
@@ -28,19 +28,23 @@ MorJS.encode(data[, callback])
 ### Define Character
 
 ```
-MorJS.defineChar(character, pattern[, callback])
+morjs.defineChar(character, pattern[, callback])
 ```
 
 ### Define Mode
 
 ```
-MorJS.defineMode(name, characters[, callback])
+morjs.defineMode(name, characters[, callback])
 ```
 
-## Properties
+## Miscellaneous
 
 ```
-MorJS.VERSION
+morjs.noConflict()
+```
+
+```
+morjs.VERSION
 ```
 
 ## Further Information

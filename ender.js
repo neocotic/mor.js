@@ -1,5 +1,5 @@
 !function ($) {
     $.ender({
-        MorJS: require('morjs')
+        morjs: require('morjs')
     })
 }(ender)
