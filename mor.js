@@ -266,6 +266,44 @@
         return ret;
     }
 
+    /**
+     * <p>Safely handles cases where synchronisation methodology may vary.</p>
+     * <p>In cases where a callback function was specified it should be used to
+     * pass the return value of the function provided or any errors that were
+     * thrown during the process. Also, the callback function itself will be
+     * returned here.</p>
+     * <p>Otherwise; errors will be thrown as normal and the return value of the
+     * function will simply be returned.</p>
+     * @param {Function} fn The function to be ran safely.
+     * @param {Function} [cb] The function to be called with the resulting value
+     * or any errors that were thrown.
+     * @returns The callback function if one was specified; otherwise the return
+     * value of the function provided.
+     * @since 1.0.1
+     * @throws Any error that occurs when no callback function was specified.
+     * @private
+     */
+    function syncSafe(fn, cb) {
+        // Check if callback was provided
+        var hasCallback = typeof cb === 'function';
+        try {
+            var ret = fn();
+            // All went, handle response
+            if (hasCallback) {
+                return cb(null, ret);
+            } else {
+                return ret;
+            }
+        } catch (e) {
+            // Something went wrong, notify the user
+            if (hasCallback) {
+                return cb(e);
+            } else {
+                throw e;
+            }
+        }
+    }
+
     // Add some predefined modes
     modes.push(['classic', [
             '\u00B7',            // Middle dot
@@ -317,54 +355,72 @@
          * <p>The message will not be decoded correctly if the mode used to
          * decode the message is not the same as that used to encode it.</p>
          * <p>If no mode is specified then the default mode will be used.</p>
+         * <p>Optionally, a callback function can be provided which will be
+         * called with the result as the second argument. If an error occurs it
+         * will be passed as the first argument to this function, otherwise this
+         * argument will be <code>null</code>.</p>
          * @param {Object} data The information for decoding.
          * @param {String} data.message The string to be decoded.
          * @param {String} [data.mode] The name of the mode to be used to
          * decode the message.
-         * @returns {String} The decoded message.
+         * @param {Function} [callback] The function to be called with the
+         * decoded message.
+         * @returns {String|Function} The decoded message or the callback
+         * function if one was specified.
          * @public
          */
-        decode: function (data) {
-            data = data || {};
-            var mode = findMode(data.mode)[1],
-                ret = '',
-                value = prepare(data.message || '', mode[4], mode[3], mode[2]);
-            // Check message was prepared
-            if (value.length) {
-                // Iterate over each word
-                for (var i = 0; i < value.length; i++) {
-                    // Insert space between each word
-                    if (i > 0) {
-                        ret += ' ';
-                    }
-                    // Iterate over each character of word
-                    for (var j = 0; j < value[i].length; j++) {
-                        // Reverse engineer pattern for character
-                        var pattern = parse(value[i][j], mode[0], SHORT,
-                                mode[1], LONG);
-                        // Check if pattern could be created
-                        if (pattern) {
-                            // Retrieve first character matching the pattern
-                            var ch = findChar(pattern, 1);
-                            // Check if character is supported
-                            if (ch) {
-                                ret += ch[0];
+        decode: function (data, callback) {
+            return syncSafe(function () {
+                data = data || {};
+                var mode = findMode(data.mode)[1],
+                    ret = '',
+                    value = prepare(data.message || '', mode[4], mode[3],
+                            mode[2]);
+                // Check message was prepared
+                if (value.length) {
+                    // Iterate over each word
+                    for (var i = 0; i < value.length; i++) {
+                        // Insert space between each word
+                        if (i > 0) {
+                            ret += ' ';
+                        }
+                        // Iterate over each character of word
+                        for (var j = 0; j < value[i].length; j++) {
+                            // Reverse engineer pattern for character
+                            var pattern = parse(value[i][j], mode[0], SHORT,
+                                    mode[1], LONG);
+                            // Check if pattern could be created
+                            if (pattern) {
+                                // Retrieve first character matching the pattern
+                                var ch = findChar(pattern, 1);
+                                // Check if character is supported
+                                if (ch) {
+                                    ret += ch[0];
+                                }
                             }
                         }
                     }
                 }
-            }
-            return ret;
+                return ret;
+            }, callback);
         },
 
         /**
          * <p>Maps a new pattern to the character provided.</p>
          * <p>If a mapping already exists for the specified character, that
          * mapping will be modified.</p>
+         * <p>Optionally, a callback function can be provided which will be
+         * called when the character has been defined. If an error occurs it
+         * will be passed as the first argument to this function, otherwise this
+         * argument will be <code>null</code>.</p>
          * @param {String} character The character whose mapping is being
          * defined. Must be a single character.
          * @param {String} pattern The pattern to be mapped. Must contain a
          * combination of only <code>S</code> and <code>L</code> characters.
+         * @param {Function} [callback] The function to be called once the
+         * defined.
+         * @returns {Function} The callback function or <code>undefined</code>
+         * if it wasn't specified.
          * @throws {Error} If <code>character</code> is contains more than a
          * single character.
          * @throws {Error} If <code>pattern</code> doesn't contain at least one
@@ -374,34 +430,36 @@
          * @throws {TypeError} If <code>pattern</code> is not a string.
          * @public
          */
-        defineChar: function (character, pattern) {
-            // Arguments must be strings
-            if (typeof character !== 'string') {
-                throw new TypeError('Invalid character type: ' +
-                        typeof character);
-            } else if (typeof pattern !== 'string') {
-                throw new TypeError('Invalid pattern type: ' +
-                        typeof pattern);
-            }
-            // Character must be singular
-            if (character.length > 1) {
-                throw new Error('Invalid character length: ' +
-                        character.length);
-            }
-            // Ensure correct cases are applied
-            var ucCharacter = character.toUpperCase(),
-                ucPattern = pattern.trim().toUpperCase();
-            // Pattern must only contain 'S'/'L' characters and at least one
-            if (!/^[SL]+$/.test(ucPattern)) {
-                throw new Error('Invalid pattern: ' + pattern);
-            }
-            // Update existing character mapping or create new one
-            var existingChar = findChar(ucCharacter, 0);
-            if (existingChar) {
-                existingChar[1] = ucPattern;
-            } else {
-                chars.push([ucCharacter, ucPattern]);
-            }
+        defineChar: function (character, pattern, callback) {
+            return syncSafe(function () {
+                // Arguments must be strings
+                if (typeof character !== 'string') {
+                    throw new TypeError('Invalid character type: ' +
+                            typeof character);
+                } else if (typeof pattern !== 'string') {
+                    throw new TypeError('Invalid pattern type: ' +
+                            typeof pattern);
+                }
+                // Character must be singular
+                if (character.length > 1) {
+                    throw new Error('Invalid character length: ' +
+                            character.length);
+                }
+                // Ensure correct cases are applied
+                var ucCharacter = character.toUpperCase(),
+                    ucPattern = pattern.trim().toUpperCase();
+                // Pattern must only contain 'S'/'L' characters and at least one
+                if (!/^[SL]+$/.test(ucPattern)) {
+                    throw new Error('Invalid pattern: ' + pattern);
+                }
+                // Update existing character mapping or create new one
+                var existingChar = findChar(ucCharacter, 0);
+                if (existingChar) {
+                    existingChar[1] = ucPattern;
+                } else {
+                    chars.push([ucCharacter, ucPattern]);
+                }
+            }, callback);
         },
 
         /**
@@ -419,12 +477,20 @@
          *     <li>Medium gap (between words)</li>
          *   </ol>
          * </p>
+         * <p>Optionally, a callback function can be provided which will be
+         * called when the mode has been defined. If an error occurs it will be
+         * passed as the first argument to this function, otherwise this
+         * argument will be <code>null</code>.</p>
          * @param {String} name The name of the mode whose mapping is being
          * defined.
          * @param {String[]} characters The characters to be mapped. Must
          * contain all required elements. Each element must only be a single
          * character and cannot contain either <code>S</code> or <code>L</code>
          * characters.
+         * @param {Function} [callback] The function to be called once the
+         * defined.
+         * @returns {Function} The callback function or <code>undefined</code>
+         * if it wasn't specified.
          * @throws {Error} If <code>characters</code> doesn't contain all
          * required characters.
          * @throws {Error} If a character contains more than just a single
@@ -433,91 +499,100 @@
          * @throws {TypeError} If <code>characters</code> is not an array.
          * @public
          */
-        defineMode: function (name, characters) {
-            // Name must be a string
-            if (typeof name !== 'string') {
-                throw new TypeError('Invalid name type: ' + typeof name);
-            }
-            // Characters must be an array (type: object)
-            if (typeof characters !== 'object') {
-                throw new TypeError('Invalid characters type: ' +
-                        typeof characters);
-            }
-            // Ensure correct cases are used
-            var lcName = name.toLowerCase(),
-                ucCharacters = [];
-            // Characters must contain each required character
-            if (characters.length !== 5) {
-                throw new Error('Invalid characters length: ' +
-                        characters.length);
-            }
-            // Iterate over each character, validating every time
-            for (var i = 0; i < characters.length; i++) {
-                // Character must be a string
-                if (typeof characters[i] !== 'string') {
-                    throw new Error('Invalid character type at [' + i + ']: ' +
-                            typeof characters[i]);
+        defineMode: function (name, characters, callback) {
+            return syncSafe(function () {
+                // Name must be a string
+                if (typeof name !== 'string') {
+                    throw new TypeError('Invalid name type: ' + typeof name);
                 }
-                // Character cannot contain 'S'/'L' characters
-                if (characters[i].indexOf(LONG) !== -1) {
-                    throw new Error('Invalid character found at [' + i +
-                            ']: ' + LONG);
-                } else if (characters[i].indexOf(SHORT) !== -1) {
-                    throw new Error('Invalid character found at [' + i +
-                            ']: ' + SHORT);
+                // Characters must be an array (type: object)
+                if (typeof characters !== 'object') {
+                    throw new TypeError('Invalid characters type: ' +
+                            typeof characters);
                 }
-                // Transform character to upper case
-                ucCharacters.push(characters[i].toUpperCase());
-            }
-            // Update existing mode mapping or create new one
-            var existingMode = findMode(lcName);
-            if (existingMode) {
-                existingMode[1] = ucCharacters;
-            } else {
-                modes.push([lcName, ucCharacters]);
-            }
+                // Ensure correct cases are used
+                var lcName = name.toLowerCase(),
+                    ucCharacters = [];
+                // Characters must contain each required character
+                if (characters.length !== 5) {
+                    throw new Error('Invalid characters length: ' +
+                            characters.length);
+                }
+                // Iterate over each character, validating every time
+                for (var i = 0; i < characters.length; i++) {
+                    // Character must be a string
+                    if (typeof characters[i] !== 'string') {
+                        throw new Error('Invalid character type at [' + i +
+                                ']: ' + typeof characters[i]);
+                    }
+                    // Character cannot contain 'S'/'L' characters
+                    if (characters[i].indexOf(LONG) !== -1) {
+                        throw new Error('Invalid character found at [' + i +
+                                ']: ' + LONG);
+                    } else if (characters[i].indexOf(SHORT) !== -1) {
+                        throw new Error('Invalid character found at [' + i +
+                                ']: ' + SHORT);
+                    }
+                    // Transform character to upper case
+                    ucCharacters.push(characters[i].toUpperCase());
+                }
+                // Update existing mode mapping or create new one
+                var existingMode = findMode(lcName);
+                if (existingMode) {
+                    existingMode[1] = ucCharacters;
+                } else {
+                    modes.push([lcName, ucCharacters]);
+                }
+            }, callback);
         },
 
         /**
          * <p>Encodes the message provided in to morse code.</p>
          * <p>If no mode is specified then the default mode will be used.</p>
+         * <p>Optionally, a callback function can be provided which will be
+         * called with the result as the second argument. If an error occurs it
+         * will be passed as the first argument to this function, otherwise this
+         * argument will be <code>null</code>.</p>
          * @param {Object} data The information for encoding.
          * @param {String} data.message The string to be encoded.
          * @param {String} [data.mode] The name of the mode to be used to
          * encode the message.
-         * @returns {String} The encoded message.
+         * @returns {String|Function} The encoded message or the callback
+         * function if one was specified.
          * @public
          */
-        encode: function (data) {
-            data = data || {};
-            var mode = findMode(data.mode)[1],
-                ret = '',
-                value = prepare(data.message || '', /\s+/, '');
-            // Check message was prepared
-            if (value.length) {
-                // Iterate over each word
-                for (var i = 0; i < value.length; i++) {
-                    // Insert medium gap between each word
-                    if (i > 0) {
-                        ret += mode[4];
-                    }
-                    // Iterate over each character of word
-                    for (var j = 0; j < value[i].length; j++) {
-                        // Insert intra-character gap between each character
-                        if (j > 0) {
-                            ret += mode[3];
+        encode: function (data, callback) {
+            return syncSafe(function () {
+                data = data || {};
+                var mode = findMode(data.mode)[1],
+                    ret = '',
+                    value = prepare(data.message || '', /\s+/, '');
+                // Check message was prepared
+                if (value.length) {
+                    // Iterate over each word
+                    for (var i = 0; i < value.length; i++) {
+                        // Insert medium gap between each word
+                        if (i > 0) {
+                            ret += mode[4];
                         }
-                        // Retrieve first character matching the character
-                        var ch = findChar(value[i][j], 0);
-                        // Check if character is supported and parse pattern
-                        if (ch) {
-                            ret += parse(ch[1], SHORT, mode[0], LONG, mode[1],
-                                    mode[2]);
+                        // Iterate over each character of word
+                        for (var j = 0; j < value[i].length; j++) {
+                            // Insert intra-character gap between each character
+                            if (j > 0) {
+                                ret += mode[3];
+                            }
+                            // Retrieve first character matching the character
+                            var ch = findChar(value[i][j], 0);
+                            // Check if character is supported and parse pattern
+                            if (ch) {
+                                ret += parse(ch[1], SHORT, mode[0], LONG,
+                                        mode[1], mode[2]);
+                            }
                         }
                     }
                 }
-            }
-            return ret;
+                return ret;
+            }, callback);
         },
 
         /**
@@ -526,7 +601,7 @@
          * @public
          * @type String
          */
-        version: '1.0.1'
+        VERSION: '1.0.1'
 
     };
 
