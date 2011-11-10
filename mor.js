@@ -621,7 +621,7 @@
          * @since 1.0.1
          * @public
          */
-        noConflict: function() {
+        noConflict: function () {
             root.morjs = previousMorjs;
             return this;
         },
@@ -643,7 +643,7 @@
         }
         exports.morjs = morjs;
     } else if (typeof define === 'function' && define.amd) {
-        define('morjs', function() {
+        define('morjs', function () {
             return morjs;
         });
     } else {
