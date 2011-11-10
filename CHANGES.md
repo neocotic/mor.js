@@ -5,3 +5,4 @@
 * Add support for callback methodology
 * Rename `MorJS` global variable to `morjs`
 * Add support for *noConflict* mode
+* Remove upper-case transformation for mode characters

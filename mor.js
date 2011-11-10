@@ -507,8 +507,10 @@
          * specified; otherwise <code>undefined</code>.
          * @throws {Error} If <code>characters</code> doesn't contain all
          * required characters.
-         * @throws {Error} If a character contains more than just a single
-         * character.
+         * @throws {Error} If an element of <code>characters</code> contains
+         * either an <code>S</code> or <code>L</code> character.
+         * @throws {TypeError} If an element of <code>characters</code> is not a
+         * string.
          * @throws {TypeError} If <code>name</code> is not a string.
          * @throws {TypeError} If <code>characters</code> is not an array.
          * @public
@@ -524,38 +526,38 @@
                     throw new TypeError('Invalid characters type: ' +
                             typeof characters);
                 }
-                // Ensure correct cases are used
-                var lcName = name.toLowerCase(),
-                    ucCharacters = [];
                 // Characters must contain each required character
                 if (characters.length !== 5) {
                     throw new Error('Invalid characters length: ' +
                             characters.length);
                 }
+                // Ensure correct cases are used
+                var lcName = name.toLowerCase(),
+                    ucCharacter = '';
                 // Iterate over each character, validating every time
                 for (var i = 0; i < characters.length; i++) {
                     // Character must be a string
                     if (typeof characters[i] !== 'string') {
-                        throw new Error('Invalid character type at [' + i +
+                        throw new TypeError('Invalid character type at [' + i +
                                 ']: ' + typeof characters[i]);
                     }
+                    // Transform character to upper case
+                    ucCharacter = characters[i].toUpperCase();
                     // Character cannot contain 'S'/'L' characters
-                    if (characters[i].indexOf(LONG) !== -1) {
+                    if (ucCharacter.indexOf(LONG) !== -1) {
                         throw new Error('Invalid character found at [' + i +
                                 ']: ' + LONG);
-                    } else if (characters[i].indexOf(SHORT) !== -1) {
+                    } else if (ucCharacter.indexOf(SHORT) !== -1) {
                         throw new Error('Invalid character found at [' + i +
                                 ']: ' + SHORT);
                     }
-                    // Transform character to upper case
-                    ucCharacters.push(characters[i].toUpperCase());
                 }
                 // Update existing mode mapping or create new one
                 var existingMode = findMode(lcName);
                 if (existingMode) {
-                    existingMode[1] = ucCharacters;
+                    existingMode[1] = characters;
                 } else {
-                    modes.push([lcName, ucCharacters]);
+                    modes.push([lcName, characters]);
                 }
             }, callback);
         },
