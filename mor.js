@@ -279,17 +279,17 @@
      * <p>Safely handles cases where synchronisation methodology may vary.</p>
      * <p>In cases where a callback function was specified it should be used to
      * pass the return value of the function provided or any errors that were
-     * thrown during the process. Also, the callback function itself will be
-     * returned here.</p>
+     * thrown during the process. Either the return value of the callback
+     * function or the error encountered will be returned here.</p>
      * <p>Otherwise; errors will be thrown as normal and the return value of the
      * function will simply be returned.</p>
      * @param {Function} fn The function to be ran safely.
      * @param {Function} [cb] The function to be called with the resulting value
      * or any errors that were thrown.
-     * @returns The callback function if one was specified; otherwise the return
-     * value of the function provided.
+     * @returns The return value of the function provided or an error if one
+     * was thrown during the process while a callback function was specified.
      * @since 1.0.1
-     * @throws Any error that occurs when no callback function was specified.
+     * @throws Any error that occurs while no callback function was specified.
      * @private
      */
     function syncSafe(fn, cb) {
@@ -373,9 +373,12 @@
          * @param {String} [data.mode] The name of the mode to be used to
          * decode the message.
          * @param {Function} [callback] The function to be called with the
-         * decoded message.
-         * @returns {String|Function} The decoded message or the callback
-         * function if one was specified.
+         * decoded message or any errors.
+         * @returns The decoded message or, where a callback function was
+         * specified, the return value of the callback function or any error
+         * that occurred while decoding the message.
+         * @throws {TypeError} If <code>data.message</code> is not a string and
+         * no callback function was specified.
          * @public
          */
         decode: function (data, callback) {
@@ -428,8 +431,9 @@
          * combination of only <code>S</code> and <code>L</code> characters.
          * @param {Function} [callback] The function to be called once the
          * defined.
-         * @returns {Function} The callback function or <code>undefined</code>
-         * if it wasn't specified.
+         * @returns The return value of the callback function or any error that
+         * occurred while defining the character if a callback function was
+         * specified; otherwise <code>undefined</code>.
          * @throws {Error} If <code>character</code> is contains more than a
          * single character.
          * @throws {Error} If <code>pattern</code> doesn't contain at least one
@@ -498,8 +502,9 @@
          * characters.
          * @param {Function} [callback] The function to be called once the
          * defined.
-         * @returns {Function} The callback function or <code>undefined</code>
-         * if it wasn't specified.
+         * @returns The return value of the callback function or any error that
+         * occurred while defining the mode if a callback function was
+         * specified; otherwise <code>undefined</code>.
          * @throws {Error} If <code>characters</code> doesn't contain all
          * required characters.
          * @throws {Error} If a character contains more than just a single
@@ -566,8 +571,13 @@
          * @param {String} data.message The string to be encoded.
          * @param {String} [data.mode] The name of the mode to be used to
          * encode the message.
-         * @returns {String|Function} The encoded message or the callback
-         * function if one was specified.
+         * @param {Function} [callback] The function to be called with the
+         * decoded message or any errors.
+         * @returns The encoded message or, where a callback function was
+         * specified, the return value of the callback function or any error
+         * that occurred while encoding the message.
+         * @throws {TypeError} If <code>data.message</code> is not a string and
+         * no callback function was specified.
          * @public
          */
         encode: function (data, callback) {
