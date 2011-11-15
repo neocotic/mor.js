@@ -1,5 +1,5 @@
 /*!
- * mor.js v1.0.1
+ * mor.js v1.0.2
  * http://forchoon.com/projects/javascript/mor-js/
  *
  * Copyright 2011, Alasdair Mercer
@@ -243,7 +243,7 @@
         if (typeof str !== 'string') {
             throw new TypeError('Invalid value type: ' + typeof str);
         }
-        var hasCharSplitter = typeof charSplitter === 'string',
+        var hasCharSplitter = typeof charSplitter !== 'undefined',
             // Splits words
             ret = str.trim().split(wordSplitter);
         for (var i = 0; i < ret.length; i++) {
@@ -352,7 +352,7 @@
      * <p>The predefined supported characters are based on the International
      * Telecommunication Union (ITU).</p>
      * @author <a href="http://github.com/neocotic">Alasdair Mercer</a>
-     * @version 1.0.1
+     * @version 1.0.2
      * @public
      * @namespace
      */
@@ -598,7 +598,7 @@
                         }
                         // Iterate over each character of word
                         for (var j = 0; j < value[i].length; j++) {
-                            // Insert intra-character gap between each character
+                            // Insert short gap between each letter
                             if (j > 0) {
                                 ret += mode[3];
                             }
@@ -634,7 +634,7 @@
          * @public
          * @type String
          */
-        VERSION: '1.0.1'
+        VERSION: '1.0.2'
 
     };
 
