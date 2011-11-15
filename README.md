@@ -21,7 +21,7 @@ morjs.encode(data[, callback])
 
 * *{String}* **message** - The message to be decoded/encoded.
 * *{String}* **[mode]** - Optional: The mode to be used to decode/encode the
-  message.
+  message (defaults to `classic`).
 
 ## Customization
 
