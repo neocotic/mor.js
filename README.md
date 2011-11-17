@@ -1,7 +1,14 @@
-# [mor.js](http://forchoon.com/projects/javascript/mor-js/)
+                                __           
+      ___ ___     ___   _ __   /\_\    ____  
+    /' __` __`\  / __`\/\`'__\ \/\ \  /',__\ 
+    /\ \/\ \/\ \/\ \L\ \ \ \/__ \ \ \/\__, `\
+    \ \_\ \_\ \_\ \____/\ \_\\_\_\ \ \/\____/
+     \/_/\/_/\/_/\/___/  \/_//_/\ \_\ \/___/ 
+                               \ \____/      
+                                \/___/       
 
-A pure JavaScript library for encoding/decoding
-[Morse code](http://en.wikipedia.org/wiki/Morse_code) messages.
+[mor.js][] is a pure JavaScript library for encoding/decoding [Morse code][]
+messages.
 
 ## Standard Usage
 
@@ -19,9 +26,9 @@ morjs.encode(data[, callback])
 
 ### Data Object
 
-* *{String}* **message** - The message to be decoded/encoded.
-* *{String}* **[mode]** - Optional: The mode to be used to decode/encode the
-  message (defaults to `classic`).
+* `message` - The message to be decoded/encoded.
+* `[mode]` - *Optional:* The mode to be used to decode/encode the message
+  (defaults to `"classic"`).
 
 ## Customization
 
@@ -40,7 +47,7 @@ morjs.defineMode(name, characters[, callback])
 ## Miscellaneous
 
 ```
-morjs.noConflict()
+morjs.noConflict([callback])
 ```
 
 ```
@@ -52,4 +59,7 @@ morjs.VERSION
 If you want more information or examples of using this library please visit the
 project's homepage;
 
-<http://forchoon.com/projects/javascript/mor-js/>
+http://forchoon.com/projects/javascript/mor-js/
+
+[mor.js]: http://forchoon.com/projects/javascript/mor-js/
+[morse code]: http://en.wikipedia.org/wiki/Morse_code
