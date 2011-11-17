@@ -356,7 +356,7 @@
         if (character.length > 1) {
           throw new Error('Invalid character length: ' + character.length);
         }
-        var ucPattern   = pattern.trim().toUpperCase();
+        var ucPattern = pattern.trim().toUpperCase();
         // `pattern` must only contain `S` & `L` characters and must contain at
         //least one of either.
         if (!/^[SL]+$/.test(ucPattern)) {
