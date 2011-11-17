@@ -128,6 +128,7 @@
 
       // Return the array of predefined modes
       return [
+      /* Name               | Chars                                      */
         ['classic',          ['\u00B7',       /* Middle dot              */
                               '\u002D',       /* Hyphen-minus            */
                               '\u0020',       /* Space                   */
