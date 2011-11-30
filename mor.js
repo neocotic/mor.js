@@ -447,8 +447,8 @@
   };
 
   // Export `morjs` for NodeJS and CommonJS.
-  if (exports) {
-    if (module && module.exports) {
+  if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
       exports = module.exports = morjs;
     }
     exports.morjs = morjs;
