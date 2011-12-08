@@ -1,13 +1,13 @@
-// [mor.js](http://forchoon.com/projects/javascript/mor-js/) 1.0.2
-// (c) 2011 Alasdair Mercer
-// Licensed under the GPL Version 3 license.
-// For all details and documentation:
-// http://neocotic.github.com/mor.js
+// [mor.js](http://neocotic.com/mor.js) 1.0.2  
+// (c) 2011 Alasdair Mercer  
+// Freely distributable under the MIT license.  
+// For all details and documentation:  
+// <http://neocotic.com/mor.js>
 
 (function (root) {
 
   // Private constants
-  // ---------
+  // -----------------
 
   var
     // Default mode used if not specified or found.
@@ -20,10 +20,10 @@
     SHORT        = 'S';
 
   // Private variables
-  // ---------
+  // -----------------
 
   var
-    // Map of Morse code patterns to supported characters.
+    // Map of Morse code patterns to supported characters.  
     // This is a multi-dimensional array and should be treated as such.
     chars         = [
     /* Char    | Pattern                          */
@@ -117,7 +117,7 @@
       ['\u017B', 'LLSSL'  ]  /* Z with dot above  */
     ],
 
-    // Map of supported modes used to encode/decode messages.
+    // Map of supported modes used to encode/decode messages.  
     // This is a multi-dimensional array and should be treated as such.
     modes         = (function () {
       // Repeat a string the specified number of times.
@@ -126,7 +126,7 @@
         return ret;
       }
 
-      // Return the array of predefined modes
+      // Return the array of predefined modes.
       return [
       /* Name               | Chars                                      */
         ['classic',          ['\u00B7',       /* Middle dot              */
@@ -167,7 +167,7 @@
     }
   }
 
-  // Return the mode mapping that matches the name provided.
+  // Return the mode mapping that matches the name provided.  
   // If no name is specified, or no matching mode could be found, the
   // `DEFAULT_MODE` will be returned.
   function findMode(name) {
@@ -203,7 +203,7 @@
     return ret;
   }
 
-  // Prepare the string to simplify encoding/decoding.
+  // Prepare the string to simplify encoding/decoding.  
   // The return value is a multi-dimensional array and should be treated as
   // such.
   function prepare(str, wordSplitter, letterSplitter, charSplitter) {
@@ -224,13 +224,13 @@
     return ret;
   }
 
-  // Safely handle cases where synchronization methodology may vary.
+  // Safely handle cases where synchronization methodology may vary.  
   // In cases where a callback function was specified it should be used to pass
   // the return value of the function provided or any errors that were thrown
   // during the process. Either the return value of the callback function or
-  // the error encountered will be returned here.
+  // the error encountered will be returned here.  
   // Otherwise; errors will be thrown as normal and the return value of the
-  // function will simply be returned.
+  // function will simply be returned.  
   // When the function provided is called the specified context will be
   // applied.
   function syncSafe(fn, cb, ctx) {
@@ -247,24 +247,24 @@
   }
 
   // mor.js setup
-  // -----------
+  // ------------
 
   // Build the publicly exposed API.
   var morjs = {
 
     // Constants
-    // ----------------
+    // ---------
 
     // Current version of `morjs`.
     VERSION: '1.0.2',
 
     // Main functions
-    // ---
+    // --------------
 
-    // Decode the message from Morse code to a human-readable message.
+    // Decode the message from Morse code to a human-readable message.  
     // The message will not be decoded correctly if the mode used to decode the
-    // message is not the same as that used to encode it.
-    // If no mode is specified `DEFAULT_MODE` will be used.
+    // message is not the same as that used to encode it.  
+    // If no mode is specified `DEFAULT_MODE` will be used.  
     // Optionally, a callback function can be provided which will be called
     // with the result as the second argument. If an error occurs it will be
     // passed as the first argument to this function, otherwise this argument
@@ -300,8 +300,8 @@
       }, callback, this);
     },
 
-    // Encode the message in to the Morse code.
-    // If no mode is specified `DEFAULT_MODE` will be used.
+    // Encode the message in to the Morse code.  
+    // If no mode is specified `DEFAULT_MODE` will be used.  
     // Optionally, a callback function can be provided which will be called
     // with the result as the second argument. If an error occurs it will be
     // passed as the first argument to this function, otherwise this argument
@@ -338,9 +338,9 @@
     // Customization functions
     // -----------------------
 
-    // Map a new pattern to the character provided.
+    // Map a new pattern to the character provided.  
     // If a mapping already exists for the specified character, that mapping
-    // will be modified.
+    // will be modified.  
     // Optionally, a callback function can be provided which will be called
     // when the character has been defined. If an error occurs it will be
     // passed as the first argument to this function, otherwise this argument
@@ -374,9 +374,9 @@
       }, callback, this);
     },
 
-    // Map new characters to the mode provided.
+    // Map new characters to the mode provided.  
     // If a mode already exists for the specified name, that mode's character
-    // mapping will be modified.
+    // mapping will be modified.  
     // The elements of `characters` should be specified in the following order;
     // * Short mark (dot)
     // * Longer mark (dash)
@@ -431,8 +431,8 @@
     // -----------------
 
     // Run mor.js in *noConflict* mode, returning the `morjs` variable to its
-    // previous owner.
-    // Returns a reference to `morjs`.
+    // previous owner.  
+    // Returns a reference to `morjs`.  
     // Optionally, a callback function can be provided which will be called
     // after the ownership has been restored. If an error occurs it will be
     // passed as the first argument to this function, otherwise this argument

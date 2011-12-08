@@ -59,7 +59,7 @@ morjs.VERSION
 If you want more information or examples of using this library please visit the
 project's homepage;
 
-http://forchoon.com/projects/javascript/mor-js/
+http://neocotic.com/mor.js
 
-[mor.js]: http://forchoon.com/projects/javascript/mor-js/
+[mor.js]: http://neocotic.com/mor.js
 [morse code]: http://en.wikipedia.org/wiki/Morse_code
