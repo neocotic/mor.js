@@ -247,13 +247,17 @@ least one of either.</p>             </td>             <td class="code">        
     <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-52">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-52">&#182;</a>               </div>               <p>Map new characters to the mode provided. <br />
 If a mode already exists for the specified name, that mode's character
 mapping will be modified. <br />
-The elements of <code>characters</code> should be specified in the following order;
-* Short mark (dot)
-* Longer mark (dash)
-* Intra-character gap (between dots and dashes within a character)
-* Short gap (between letters)
-* Medium gap (between words)
-Optionally, a callback function can be provided which will be called
+The elements of <code>characters</code> should be specified in the following order;</p>
+
+<ul>
+<li>Short mark (dot)</li>
+<li>Longer mark (dash)</li>
+<li>Intra-character gap (between dots and dashes within a character)</li>
+<li>Short gap (between letters)</li>
+<li>Medium gap (between words)</li>
+</ul>
+
+<p>Optionally, a callback function can be provided which will be called
 when the mode has been defined. If an error occurs it will be passed as
 the first argument to this function, otherwise this argument will be
 <code>null</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">defineMode</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">characters</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>

@@ -378,11 +378,13 @@
     // If a mode already exists for the specified name, that mode's character
     // mapping will be modified.  
     // The elements of `characters` should be specified in the following order;
+    // 
     // * Short mark (dot)
     // * Longer mark (dash)
     // * Intra-character gap (between dots and dashes within a character)
     // * Short gap (between letters)
     // * Medium gap (between words)
+    // 
     // Optionally, a callback function can be provided which will be called
     // when the mode has been defined. If an error occurs it will be passed as
     // the first argument to this function, otherwise this argument will be
