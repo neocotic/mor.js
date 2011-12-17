@@ -65,5 +65,6 @@ visit the project's homepage;
 
 http://neocotic.com/mor.js
 
+[@neocotic]: https://twitter.com/#!/neocotic
 [mor.js]: http://neocotic.com/mor.js
 [morse code]: http://en.wikipedia.org/wiki/Morse_code
