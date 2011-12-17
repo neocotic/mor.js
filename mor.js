@@ -167,6 +167,13 @@
     }
   }
 
+  // Return the **last** function in the arguments provided, where possible.
+  function findLastFunction() {
+    for (var i = arguments.length; i >= 0; --i) {
+      if (typeof arguments[i] === 'function') return arguments[i];
+    }
+  }
+
   // Return the mode mapping that matches the name provided.  
   // If no name is specified, or no matching mode could be found, the
   // `DEFAULT_MODE` will be returned.
@@ -258,8 +265,8 @@
     // Current version of `morjs`.
     VERSION: '1.0.2',
 
-    // Main functions
-    // --------------
+    // Primary functions
+    // -----------------
 
     // Decode the message from Morse code to a human-readable message.  
     // The message will not be decoded correctly if the mode used to decode the
@@ -270,8 +277,17 @@
     // passed as the first argument to this function, otherwise this argument
     // will be `null`.
     decode: function (data, callback) {
+      callback = findLastFunction(data, callback);
       return syncSafe(function () {
-        data = data || {};
+        switch (typeof data) {
+        case 'object': break;
+        case 'string':
+          data = {message: data};
+          break;
+        default:
+          data = {};
+          break;
+        }
         var 
           mode  = findMode(data.mode)[1],
           ret   = '',
@@ -307,8 +323,17 @@
     // passed as the first argument to this function, otherwise this argument
     // will be `null`.
     encode: function (data, callback) {
+      callback = findLastFunction(data, callback);
       return syncSafe(function () {
-        data = data || {};
+        switch (typeof data) {
+        case 'object': break;
+        case 'string':
+          data = {message: data};
+          break;
+        default:
+          data = {};
+          break;
+        }
         var
           mode  = findMode(data.mode)[1],
           ret   = '',
@@ -431,6 +456,24 @@
 
     // Utility functions
     // -----------------
+
+    // Return a read-only copy of the character mappings currently loaded.
+    chars: function (callback) {
+      return syncSafe(function () {
+        var ret = [];
+        for (var i = 0; i < chars.length; i++) ret.push(chars[i]);
+        return ret;
+      }, callback, this);
+    },
+
+    // Return a read-only copy of the modes currently loaded.
+    modes: function (callback) {
+      return syncSafe(function () {
+        var ret = [];
+        for (var i = 0; i < modes.length; i++) ret.push(modes[i]);
+        return ret;
+      }, callback, this);
+    },
 
     // Run mor.js in *noConflict* mode, returning the `morjs` variable to its
     // previous owner.  
