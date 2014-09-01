@@ -1,15 +1,32 @@
 {
-  "name"        : "morjs",
-  "description" : "Library for encoding/decoding Morse code messages",
-  "version"     : "1.0.2",
-  "homepage"    : "http://neocotic.com/mor.js",
-  "bugs"        : {"url"   : "https://github.com/neocotic/mor.js/issues"},
-  "author"      : "Alasdair Mercer <mercer.alasdair@gmail.com> (http://neocotic.com)",
-  "licenses"    : [{"type" : "MIT",
-                    "url"  : "https://github.com/neocotic/mor.js/raw/master/LICENSE.md"}],
-  "keywords"    : ["morse", "decode", "encode", "fun", "util"],
-  "repository"  : {"type"  : "git",
-                   "url"   : "git://github.com/neocotic/mor.js.git"},
-  "main"        : "mor.js",
-  "ender"       : "ender.js"
+  "name": "morjs",
+  "version": "1.0.2",
+  "description": "Library for encoding/decoding Morse code messages",
+  "homepage": "http://neocotic.com/mor.js",
+  "bugs": {
+    "url": "https://github.com/neocotic/mor.js/issues"
+  },
+  "author": {
+    "name": "Alasdair Mercer",
+    "email": "mercer.alasdair@gmail.com",
+    "url": "http://neocotic.com"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/neocotic/mor.js/raw/master/LICENSE.md"
+    }
+  ],
+  "keywords": [
+    "morse",
+    "decode",
+    "encode",
+    "fun",
+    "util"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/neocotic/mor.js.git"
+  },
+  "main": "mor.js"
 }
