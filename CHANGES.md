@@ -3,6 +3,7 @@
 * Remove [Ender][] support
 * Add [Grunt][] build system
 * Add [Bower][] support
+* Fix [CommonJS][] support
 
 2011.12.17, Version 1.0.2
 
