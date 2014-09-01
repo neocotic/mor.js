@@ -1,2 +1,13 @@
-/docs
-/test
+docs
+test
+.jshintrc
+.travis.yml
+AUTHORS.md
+CHANGES.md
+CONTRIBUTING.md
+Gruntfile.js
+INSTALL.md
+README.md
+bower.json
+mor.min.js
+mor.min.map

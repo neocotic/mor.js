@@ -1,0 +1,30 @@
+{
+  "boss": true,
+  "browser": true,
+  "camelcase": true,
+  "curly": true,
+  "devel": false,
+  "eqeqeq": true,
+  "expr": true,
+  "immed": true,
+  "latedef": true,
+  "laxcomma": false,
+  "maxlen": 120,
+  "newcap": true,
+  "noarg": true,
+  "node": true,
+  "nonew": true,
+  "predef": [
+    "after",
+    "afterEach",
+    "before",
+    "beforeEach",
+    "define",
+    "describe",
+    "it"
+  ],
+  "quotmark": "single",
+  "strict": true,
+  "undef": true,
+  "unused": true
+}
