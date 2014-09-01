@@ -1,9 +1,12 @@
 2014.??.??, Version 1.1.0
 
-* Remove [Ender][] support
-* Add [Grunt][] build system
+* [#2](https://github.com/neocotic/mor.js/issues/2): Add unit tests
 * Add [Bower][] support
+* Add [Grunt][] build system
+* Change default mode to `"compact"`
 * Fix [CommonJS][] support
+* Remove [Ender][] support
+* Rewrite API
 
 2011.12.17, Version 1.0.2
 

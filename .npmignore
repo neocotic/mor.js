@@ -1,6 +1,5 @@
 docs
 test
-.jshintrc
 .travis.yml
 AUTHORS.md
 CHANGES.md

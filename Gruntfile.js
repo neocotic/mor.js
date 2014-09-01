@@ -19,12 +19,50 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      all: [
+      main: [
         'Gruntfile.js',
         'mor.js'
       ],
+      test: {
+        files: {
+          src: ['test/**/*.js']
+        },
+        options: {
+          globals:      {
+            after:      true,
+            afterEach:  true,
+            before:     true,
+            beforeEach: true,
+            describe:   true,
+            it:         true
+          },
+          globalstrict: true,
+          strict:       false
+        }
+      },
       options: {
-        jshintrc: '.jshintrc'
+        boss:      true,
+        browser:   true,
+        camelcase: true,
+        curly:     true,
+        devel:     false,
+        eqeqeq:    true,
+        expr:      true,
+        globals:   {
+          define: true
+        },
+        immed:     true,
+        latedef:   true,
+        laxcomma:  false,
+        maxlen:    120,
+        newcap:    true,
+        noarg:     true,
+        node:      true,
+        nonew:     true,
+        quotmark:  'single',
+        strict:    true,
+        undef:     true,
+        unused:    true
       }
     },
 
