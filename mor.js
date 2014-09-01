@@ -550,7 +550,7 @@
 
     exports.morjs = morjs;
   } else if (typeof define === 'function' && define.amd) {
-    define('morjs', function() {
+    define(function() {
       return morjs;
     });
   } else {
