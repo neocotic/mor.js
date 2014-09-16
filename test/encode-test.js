@@ -3,17 +3,13 @@
 // Load external dependencies.
 var expect = require('expect.js');
 var fs = require('fs');
-var morjs = require('../mor.js');
 var path = require('path');
+
+// Load internal dependencies.
+var morjs = require('../mor.js');
 
 // Run test suite.
 describe('morjs.encode', function() {
-  var input;
-
-  var joinLines = function(str, mode) {
-    return str.replace(/[\n]/g, mode.wordSpacer);
-  };
-
   var loadFixture = function(filePath, callback) {
     filePath = path.join('test', 'fixtures', filePath);
 
@@ -26,14 +22,6 @@ describe('morjs.encode', function() {
     });
   };
 
-  before(function(done) {
-    loadFixture('input.txt', function(data) {
-      input = data;
-
-      done();
-    });
-  });
-
   it('should return an empty string if no message is provided', function() {
     expect(morjs.encode('')).to.be('');
   });
@@ -44,59 +32,171 @@ describe('morjs.encode', function() {
     expect(morjs.encode('  \n  \r  ')).to.be('');
   });
 
-  it('should encode using "compact" mode by default', function(done) {
-    loadFixture('output-compact.txt', function(data) {
-      expect(morjs.encode(input)).to.be(joinLines(data, morjs.modes.compact));
+  it('should encode all characters correctly', function(done) {
+    loadFixture('encoded.txt', function(encoded) {
+      loadFixture('decoded.txt', function(decoded) {
+        expect(morjs.encode(decoded)).to.be(encoded.replace(/\n/g, morjs.modes.compact.wordSpacer));
 
-      done();
+        done();
+      });
     });
   });
 
-  it('should encode using "classic" mode correctly', function(done) {
-    loadFixture('output-classic.txt', function(data) {
-      expect(morjs.encode(input, {mode: 'classic'})).to.be(joinLines(data, morjs.modes.classic));
-
-      done();
-    });
+  it('should encode using "compact" mode by default', function() {
+    expect(morjs.encode('SOS', {mode: 'compact'})).to.be([
+      '\u00B7\u00B7\u00B7',
+      '---',
+      '\u00B7\u00B7\u00B7'
+    ].join(' '));
   });
 
-  it.skip('should encode using "classicEntities" mode correctly', function(done) {
-    loadFixture('output-classicEntities.txt', function(data) {
-      expect(morjs.encode(input, {mode: 'classicEntities'})).to.be(joinLines(data, morjs.modes.classicEntities));
+  it('should encode using "classic" mode correctly', function() {
+    var options = {mode: 'classic'};
 
-      done();
-    });
+    expect(morjs.encode('SOS', options)).to.be([
+      '\u00B7 \u00B7 \u00B7',
+      '- - -',
+      '\u00B7 \u00B7 \u00B7'
+    ].join('   '));
+    expect(morjs.encode('save our souls', options)).to.be([
+      [
+        '\u00B7 \u00B7 \u00B7',
+        '\u00B7 -',
+        '\u00B7 \u00B7 \u00B7 -',
+        '\u00B7'
+      ].join('   '),
+      [
+        '- - -',
+        '\u00B7 \u00B7 -',
+        '\u00B7 - \u00B7'
+      ].join('   '),
+      [
+        '\u00B7 \u00B7 \u00B7',
+        '- - -',
+        '\u00B7 \u00B7 -',
+        '\u00B7 - \u00B7 \u00B7',
+        '\u00B7 \u00B7 \u00B7'
+      ].join('   ')
+    ].join('       '));
   });
 
-  it('should encode using "compact" mode correctly', function(done) {
-    loadFixture('output-compact.txt', function(data) {
-      expect(morjs.encode(input, {mode: 'compact'})).to.be(joinLines(data, morjs.modes.compact));
+  it('should encode using "classicEntities" mode correctly', function() {
+    var options = {mode: 'classicEntities'};
 
-      done();
-    });
+    expect(morjs.encode('SOS', options)).to.be([
+      '&middot;&nbsp;&middot;&nbsp;&middot;',
+      '&#45;&nbsp;&#45;&nbsp;&#45;',
+      '&middot;&nbsp;&middot;&nbsp;&middot;'
+    ].join('&nbsp;&nbsp;&nbsp;'));
+    expect(morjs.encode('save our souls', options)).to.be([
+      [
+        '&middot;&nbsp;&middot;&nbsp;&middot;',
+        '&middot;&nbsp;&#45;',
+        '&middot;&nbsp;&middot;&nbsp;&middot;&nbsp;&#45;',
+        '&middot;'
+      ].join('&nbsp;&nbsp;&nbsp;'),
+      [
+        '&#45;&nbsp;&#45;&nbsp;&#45;',
+        '&middot;&nbsp;&middot;&nbsp;&#45;',
+        '&middot;&nbsp;&#45;&nbsp;&middot;'
+      ].join('&nbsp;&nbsp;&nbsp;'),
+      [
+        '&middot;&nbsp;&middot;&nbsp;&middot;',
+        '&#45;&nbsp;&#45;&nbsp;&#45;',
+        '&middot;&nbsp;&middot;&nbsp;&#45;',
+        '&middot;&nbsp;&#45;&nbsp;&middot;&nbsp;&middot;',
+        '&middot;&nbsp;&middot;&nbsp;&middot;'
+      ].join('&nbsp;&nbsp;&nbsp;')
+    ].join('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'));
   });
 
-  it.skip('should encode using "compactEntities" mode correctly', function(done) {
-    loadFixture('output-compactEntities.txt', function(data) {
-      expect(morjs.encode(input, {mode: 'compactEntities'})).to.be(joinLines(data, morjs.modes.compactEntities));
+  it('should encode using "compact" mode correctly', function() {
+    var options = {mode: 'compact'};
 
-      done();
-    });
+    expect(morjs.encode('SOS', options)).to.be([
+      '\u00B7\u00B7\u00B7',
+      '---',
+      '\u00B7\u00B7\u00B7'
+    ].join(' '));
+    expect(morjs.encode('save our souls', options)).to.be([
+      [
+        '\u00B7\u00B7\u00B7',
+        '\u00B7-',
+        '\u00B7\u00B7\u00B7-',
+        '\u00B7'
+      ].join(' '),
+      [
+        '---',
+        '\u00B7\u00B7-',
+        '\u00B7-\u00B7'
+      ].join(' '),
+      [
+        '\u00B7\u00B7\u00B7',
+        '---',
+        '\u00B7\u00B7-',
+        '\u00B7-\u00B7\u00B7',
+        '\u00B7\u00B7\u00B7'
+      ].join(' ')
+    ].join('   '));
   });
 
-  it.skip('should encode using "digital" mode correctly', function(done) {
-    loadFixture('output-digital.txt', function(data) {
-      expect(morjs.encode(input, {mode: 'digital'})).to.be(joinLines(data, morjs.modes.digital));
+  it('should encode using "compactEntities" mode correctly', function() {
+    var options = {mode: 'compactEntities'};
 
-      done();
-    });
+    expect(morjs.encode('SOS', options)).to.be([
+      '&middot;&middot;&middot;',
+      '&#45;&#45;&#45;',
+      '&middot;&middot;&middot;'
+    ].join('&nbsp;'));
+    expect(morjs.encode('save our souls', options)).to.be([
+      [
+        '&middot;&middot;&middot;',
+        '&middot;&#45;',
+        '&middot;&middot;&middot;&#45;',
+        '&middot;'
+      ].join('&nbsp;'),
+      [
+        '&#45;&#45;&#45;',
+        '&middot;&middot;&#45;',
+        '&middot;&#45;&middot;'
+      ].join('&nbsp;'),
+      [
+        '&middot;&middot;&middot;',
+        '&#45;&#45;&#45;',
+        '&middot;&middot;&#45;',
+        '&middot;&#45;&middot;&middot;',
+        '&middot;&middot;&middot;'
+      ].join('&nbsp;')
+    ].join('&nbsp;&nbsp;&nbsp;'));
   });
 
-  it.skip('should encode using "simple" mode correctly', function(done) {
-    loadFixture('output-simple.txt', function(data) {
-      expect(morjs.encode(input, {mode: 'simple'})).to.be(joinLines(data, morjs.modes.simple));
+  it('should encode using "simple" mode correctly', function() {
+    var options = {mode: 'simple'};
 
-      done();
-    });
+    expect(morjs.encode('SOS', options)).to.be([
+      '...',
+      '---',
+      '...'
+    ].join(' '));
+    expect(morjs.encode('save our souls', options)).to.be([
+      [
+        '...',
+        '.-',
+        '...-',
+        '.'
+      ].join(' '),
+      [
+        '---',
+        '..-',
+        '.-.'
+      ].join(' '),
+      [
+        '...',
+        '---',
+        '..-',
+        '.-..',
+        '...'
+      ].join(' ')
+    ].join('\n'));
   });
 });

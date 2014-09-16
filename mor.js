@@ -62,7 +62,7 @@
 
   // Return the mode mapping that matches the name provided.
   var getMode = function(name) {
-    return modes[name.toLowerCase()];
+    return modes[name];
   };
 
   // Return the given `options` with all of the `defaults` applied.
@@ -275,15 +275,6 @@
       longString:          '&#45;',      /* Hyphen-minus            */
       shortString:         '&middot;',   /* Middle dot              */
       wordSpacer:   repeat('&nbsp;', 3)  /* Non-breaking space (x3) */
-    },
-
-    // Pure numeric output using only "0" and "1" values.
-    digital: {
-      charSpacer:          '\u0030',     /* 0                       */
-      letterSpacer: repeat('\u0030', 3), /* 0 (x3)                  */
-      longString:   repeat('\u0031', 3), /* 1 (x3)                  */
-      shortString:         '\u0031',     /* 1                       */
-      wordSpacer:   repeat('\u0030', 7)  /* 0 (x7)                  */
     },
 
     // Simple output using a plain hyphen and full stop mixed using a single space to split letters and a new line for

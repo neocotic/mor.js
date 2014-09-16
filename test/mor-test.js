@@ -3,6 +3,8 @@
 // Load external dependencies.
 var expect = require('expect.js');
 var fs = require('fs');
+
+// Load internal dependencies.
 var morjs = require('../mor.js');
 
 // Run test suite.
@@ -38,7 +40,6 @@ describe('morjs.modes', function() {
       'classicEntities',
       'compact',
       'compactEntities',
-      'digital',
       'simple'
     ]);
   });
@@ -84,17 +85,6 @@ describe('morjs.modes', function() {
       longString:   '&#45;',
       shortString:  '&middot;',
       wordSpacer:   '&nbsp;&nbsp;&nbsp;'
-    });
-  });
-
-  it('should have the "digital" mode correctly defined', function() {
-    expect(morjs.modes).to.have.property('digital');
-    expect(morjs.modes.digital).to.eql({
-      charSpacer:   '\u0030',
-      letterSpacer: '\u0030\u0030\u0030',
-      longString:   '\u0031\u0031\u0031',
-      shortString:  '\u0031',
-      wordSpacer:   '\u0030\u0030\u0030\u0030\u0030\u0030\u0030'
     });
   });
 

@@ -1,4 +1,10 @@
+'use strict';
+
+// Load external dependencies.
+
+// Load internal dependencies.
+
 // Run test suite.
-describe.skip('morjs.decode', function() {
+describe('morjs.decode', function() {
   // TODO: Complete
 });
