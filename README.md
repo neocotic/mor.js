@@ -7,9 +7,22 @@
                                \ \____/
                                 \/___/
 
-[mor.js][] is a pure JavaScript library for encoding/decoding [Morse code][] messages.
+[mor.js][0] is a pure JavaScript library for encoding/decoding [Morse code][3] messages.
 
-[![Build Status](https://secure.travis-ci.org/neocotic/mor.js.png)](http://travis-ci.org/neocotic/mor.js)
+[![Build Status](https://travis-ci.org/neocotic/mor.js.svg?branch=develop)][1]
+
+## Install
+
+Install using the package manager for your desired environment(s):
+
+``` bash
+# for node.js:
+$ npm install morjs
+# OR; for the browser:
+$ bower install morjs
+```
+
+This library has no dependencies on any other library.
 
 ## Standard Usage
 
@@ -45,16 +58,19 @@ here;
 
 https://github.com/neocotic/mor.js/issues
 
+See the `CONTRIBUTING.md` document for more details.
+
 ## Questions?
 
 Take a look at `docs/mor.html` to get a better understanding of what the code is doing.
 
-If that doesn't help, feel free to follow me on Twitter, [@neocotic][].
+If that doesn't help, feel free to follow me on Twitter, [@neocotic][2].
 
 However, if you want more information or examples of using this library please visit the project's homepage;
 
 http://neocotic.com/mor.js
 
-[@neocotic]: https://twitter.com/#!/neocotic
-[mor.js]: http://neocotic.com/mor.js
-[morse code]: http://en.wikipedia.org/wiki/Morse_code
+[0]: http://neocotic.com/mor.js
+[1]: https://travis-ci.org/neocotic/mor.js
+[2]: https://twitter.com/neocotic
+[3]: http://en.wikipedia.org/wiki/Morse_code
