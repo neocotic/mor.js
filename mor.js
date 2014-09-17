@@ -1,6 +1,6 @@
-// [mor.js](http://neocotic.com/mor.js) 1.0.2
+// [mor.js](http://neocotic.com/mor.js) 1.1.0
 //
-// (c) 2011 Alasdair Mercer
+// (c) 2014 Alasdair Mercer
 //
 // Freely distributable under the MIT license.
 //
@@ -300,7 +300,7 @@
     // ---------
 
     // Current version of `morjs`.
-    VERSION: '1.0.2',
+    VERSION: '1.1.0',
 
     // Variables
     // ---------

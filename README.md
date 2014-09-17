@@ -142,7 +142,7 @@ This is really just intended for use within a browser.
 The current version of `morjs`.
 
 ``` javascript
-console.log(morjs.VERSION); // "1.0.2"
+console.log(morjs.VERSION); // "1.1.0"
 ```
 
 ## Bugs
@@ -159,7 +159,7 @@ A list of [mor.js][0] contributors can be found in [AUTHORS.md][7].
 
 ## License
 
-Copyright (c) 2011 Alasdair Mercer
+Copyright (c) 2014 Alasdair Mercer
 
 See [LICENSE.md][9] for more information on our MIT license.
 

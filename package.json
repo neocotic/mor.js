@@ -1,6 +1,6 @@
 {
   "name": "morjs",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Library for encoding/decoding Morse code messages",
   "homepage": "http://neocotic.com/mor.js",
   "bugs": {
