@@ -29,10 +29,12 @@ distributables when cutting a release.
 
 All pull requests should be made to the `develop` branch.
 
-Don't forget to add your details to the list of `AUTHORS.md` if you want your contribution to be recognized by others.
+Don't forget to add your details to the list of [AUTHORS.md][5] if you want your contribution to be recognized by
+others.
 
 [0]: https://github.com/neocotic/mor.js
 [1]: https://github.com/neocotic/mor.js/issues
 [2]: https://github.com/neocotic/mor.js/issues/new
 [3]: http://nodejs.org
 [4]: http://gruntjs.com
+[5]: [7]: https://github.com/neocotic/mor.js/blob/master/AUTHORS.md
