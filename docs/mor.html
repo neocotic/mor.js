@@ -1,351 +1,1228 @@
-<!DOCTYPE html>  <html> <head>   <title>mor.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               mor.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p><a href="http://neocotic.com/mor.js">mor.js</a> 1.0.2 <br />
-(c) 2011 Alasdair Mercer <br />
-Freely distributable under the MIT license. <br />
-For all details and documentation: <br />
-<a href="http://neocotic.com/mor.js">http://neocotic.com/mor.js</a></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Private constants</h2>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Default mode used if not specified or found.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">DEFAULT_MODE</span> <span class="o">=</span> <span class="s1">&#39;classic&#39;</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Pattern placeholder for longer marks.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">LONG</span>         <span class="o">=</span> <span class="s1">&#39;L&#39;</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Pattern placeholder for shor marks.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">SHORT</span>        <span class="o">=</span> <span class="s1">&#39;S&#39;</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h2>Private variables</h2>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Map of Morse code patterns to supported characters. <br />
-This is a multi-dimensional array and should be treated as such.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">chars</span>         <span class="o">=</span> <span class="p">[</span>
-    <span class="cm">/* Char    | Pattern                          */</span>
-    <span class="cm">/* Letters                                    */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0041&#39;</span><span class="p">,</span> <span class="s1">&#39;SL&#39;</span>     <span class="p">],</span> <span class="cm">/* A                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0042&#39;</span><span class="p">,</span> <span class="s1">&#39;LSSS&#39;</span>   <span class="p">],</span> <span class="cm">/* B                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0043&#39;</span><span class="p">,</span> <span class="s1">&#39;LSLS&#39;</span>   <span class="p">],</span> <span class="cm">/* C                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0044&#39;</span><span class="p">,</span> <span class="s1">&#39;LSS&#39;</span>    <span class="p">],</span> <span class="cm">/* D                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0045&#39;</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span>      <span class="p">],</span> <span class="cm">/* E                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0046&#39;</span><span class="p">,</span> <span class="s1">&#39;SSLS&#39;</span>   <span class="p">],</span> <span class="cm">/* F                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0047&#39;</span><span class="p">,</span> <span class="s1">&#39;LLS&#39;</span>    <span class="p">],</span> <span class="cm">/* G                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0048&#39;</span><span class="p">,</span> <span class="s1">&#39;SSSS&#39;</span>   <span class="p">],</span> <span class="cm">/* H                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0049&#39;</span><span class="p">,</span> <span class="s1">&#39;SS&#39;</span>     <span class="p">],</span> <span class="cm">/* I                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u004A&#39;</span><span class="p">,</span> <span class="s1">&#39;SLLL&#39;</span>   <span class="p">],</span> <span class="cm">/* J                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u004B&#39;</span><span class="p">,</span> <span class="s1">&#39;LSL&#39;</span>    <span class="p">],</span> <span class="cm">/* K                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u004C&#39;</span><span class="p">,</span> <span class="s1">&#39;SLSS&#39;</span>   <span class="p">],</span> <span class="cm">/* L                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u004D&#39;</span><span class="p">,</span> <span class="s1">&#39;LL&#39;</span>     <span class="p">],</span> <span class="cm">/* M                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u004E&#39;</span><span class="p">,</span> <span class="s1">&#39;LS&#39;</span>     <span class="p">],</span> <span class="cm">/* N                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u004F&#39;</span><span class="p">,</span> <span class="s1">&#39;LLL&#39;</span>    <span class="p">],</span> <span class="cm">/* O                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0050&#39;</span><span class="p">,</span> <span class="s1">&#39;SLLS&#39;</span>   <span class="p">],</span> <span class="cm">/* P                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0051&#39;</span><span class="p">,</span> <span class="s1">&#39;LLSL&#39;</span>   <span class="p">],</span> <span class="cm">/* Q                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0052&#39;</span><span class="p">,</span> <span class="s1">&#39;SLS&#39;</span>    <span class="p">],</span> <span class="cm">/* R                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0053&#39;</span><span class="p">,</span> <span class="s1">&#39;SSS&#39;</span>    <span class="p">],</span> <span class="cm">/* S                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0054&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span>      <span class="p">],</span> <span class="cm">/* T                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0055&#39;</span><span class="p">,</span> <span class="s1">&#39;SSL&#39;</span>    <span class="p">],</span> <span class="cm">/* U                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0056&#39;</span><span class="p">,</span> <span class="s1">&#39;SSSL&#39;</span>   <span class="p">],</span> <span class="cm">/* V                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0057&#39;</span><span class="p">,</span> <span class="s1">&#39;SLL&#39;</span>    <span class="p">],</span> <span class="cm">/* W                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0058&#39;</span><span class="p">,</span> <span class="s1">&#39;LSSL&#39;</span>   <span class="p">],</span> <span class="cm">/* X                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0059&#39;</span><span class="p">,</span> <span class="s1">&#39;LSLL&#39;</span>   <span class="p">],</span> <span class="cm">/* Y                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u005A&#39;</span><span class="p">,</span> <span class="s1">&#39;LLSS&#39;</span>   <span class="p">],</span> <span class="cm">/* Z                 */</span>
-    <span class="cm">/* Numbers                                    */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0030&#39;</span><span class="p">,</span> <span class="s1">&#39;LLLLL&#39;</span>  <span class="p">],</span> <span class="cm">/* 0                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0031&#39;</span><span class="p">,</span> <span class="s1">&#39;SLLLL&#39;</span>  <span class="p">],</span> <span class="cm">/* 1                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0032&#39;</span><span class="p">,</span> <span class="s1">&#39;SSLLL&#39;</span>  <span class="p">],</span> <span class="cm">/* 2                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0033&#39;</span><span class="p">,</span> <span class="s1">&#39;SSSLL&#39;</span>  <span class="p">],</span> <span class="cm">/* 3                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0034&#39;</span><span class="p">,</span> <span class="s1">&#39;SSSSL&#39;</span>  <span class="p">],</span> <span class="cm">/* 4                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0035&#39;</span><span class="p">,</span> <span class="s1">&#39;SSSSS&#39;</span>  <span class="p">],</span> <span class="cm">/* 5                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0036&#39;</span><span class="p">,</span> <span class="s1">&#39;LSSSS&#39;</span>  <span class="p">],</span> <span class="cm">/* 6                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0037&#39;</span><span class="p">,</span> <span class="s1">&#39;LLSSS&#39;</span>  <span class="p">],</span> <span class="cm">/* 7                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0038&#39;</span><span class="p">,</span> <span class="s1">&#39;LLLSS&#39;</span>  <span class="p">],</span> <span class="cm">/* 8                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0039&#39;</span><span class="p">,</span> <span class="s1">&#39;LLLLS&#39;</span>  <span class="p">],</span> <span class="cm">/* 9                 */</span>
-    <span class="cm">/* Punctuation                                */</span>
-      <span class="p">[</span><span class="s1">&#39;\u002E&#39;</span><span class="p">,</span> <span class="s1">&#39;SLSLSL&#39;</span> <span class="p">],</span> <span class="cm">/* Full stop         */</span>
-      <span class="p">[</span><span class="s1">&#39;\u002C&#39;</span><span class="p">,</span> <span class="s1">&#39;LLSSLL&#39;</span> <span class="p">],</span> <span class="cm">/* Comma             */</span>
-      <span class="p">[</span><span class="s1">&#39;\u003F&#39;</span><span class="p">,</span> <span class="s1">&#39;SSLLSS&#39;</span> <span class="p">],</span> <span class="cm">/* Question mark     */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0027&#39;</span><span class="p">,</span> <span class="s1">&#39;SLLLLS&#39;</span> <span class="p">],</span> <span class="cm">/* Apostrophe        */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0021&#39;</span><span class="p">,</span> <span class="s1">&#39;LSLSLL&#39;</span> <span class="p">],</span> <span class="cm">/* Exclamation mark  */</span>
-      <span class="p">[</span><span class="s1">&#39;\u002F&#39;</span><span class="p">,</span> <span class="s1">&#39;LSSLS&#39;</span>  <span class="p">],</span> <span class="cm">/* Slash             */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0028&#39;</span><span class="p">,</span> <span class="s1">&#39;LSLLS&#39;</span>  <span class="p">],</span> <span class="cm">/* Left parenthesis  */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0029&#39;</span><span class="p">,</span> <span class="s1">&#39;LSLLSL&#39;</span> <span class="p">],</span> <span class="cm">/* Right parenthesis */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0026&#39;</span><span class="p">,</span> <span class="s1">&#39;SLSSS&#39;</span>  <span class="p">],</span> <span class="cm">/* Ampersand         */</span>
-      <span class="p">[</span><span class="s1">&#39;\u003A&#39;</span><span class="p">,</span> <span class="s1">&#39;LLLSSS&#39;</span> <span class="p">],</span> <span class="cm">/* Colon             */</span>
-      <span class="p">[</span><span class="s1">&#39;\u003B&#39;</span><span class="p">,</span> <span class="s1">&#39;LSLSLS&#39;</span> <span class="p">],</span> <span class="cm">/* Semicolon         */</span>
-      <span class="p">[</span><span class="s1">&#39;\u003D&#39;</span><span class="p">,</span> <span class="s1">&#39;LSSSL&#39;</span>  <span class="p">],</span> <span class="cm">/* Equal sign        */</span>
-      <span class="p">[</span><span class="s1">&#39;\u002B&#39;</span><span class="p">,</span> <span class="s1">&#39;SLSLS&#39;</span>  <span class="p">],</span> <span class="cm">/* Plus sign         */</span>
-      <span class="p">[</span><span class="s1">&#39;\u002D&#39;</span><span class="p">,</span> <span class="s1">&#39;LSSSSL&#39;</span> <span class="p">],</span> <span class="cm">/* Hyphen-minus      */</span>
-      <span class="p">[</span><span class="s1">&#39;\u005F&#39;</span><span class="p">,</span> <span class="s1">&#39;SSLLSL&#39;</span> <span class="p">],</span> <span class="cm">/* Low line          */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0022&#39;</span><span class="p">,</span> <span class="s1">&#39;SLSSLS&#39;</span> <span class="p">],</span> <span class="cm">/* Quotation mark    */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0024&#39;</span><span class="p">,</span> <span class="s1">&#39;SSSLSSL&#39;</span><span class="p">],</span> <span class="cm">/* Dollar sign       */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0040&#39;</span><span class="p">,</span> <span class="s1">&#39;SLLSLS&#39;</span> <span class="p">],</span> <span class="cm">/* At sign           */</span>
-    <span class="cm">/* Non-English extensions                     */</span>
-      <span class="p">[</span><span class="s1">&#39;\u00C4&#39;</span><span class="p">,</span> <span class="s1">&#39;SLSL&#39;</span>   <span class="p">],</span> <span class="cm">/* A with diaeresis  */</span>
-      <span class="p">[</span><span class="s1">&#39;\u00C6&#39;</span><span class="p">,</span> <span class="s1">&#39;SLSL&#39;</span>   <span class="p">],</span> <span class="cm">/* Æ                 */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0104&#39;</span><span class="p">,</span> <span class="s1">&#39;SLSL&#39;</span>   <span class="p">],</span> <span class="cm">/* A with ogonek     */</span>
-      <span class="p">[</span><span class="s1">&#39;\u00C0&#39;</span><span class="p">,</span> <span class="s1">&#39;SLLSL&#39;</span>  <span class="p">],</span> <span class="cm">/* A with grave      */</span>
-      <span class="p">[</span><span class="s1">&#39;\u00C5&#39;</span><span class="p">,</span> <span class="s1">&#39;SLLSL&#39;</span>  <span class="p">],</span> <span class="cm">/* A with ring above */</span>
-      <span class="p">[</span><span class="s1">&#39;\u00C7&#39;</span><span class="p">,</span> <span class="s1">&#39;LSLSS&#39;</span>  <span class="p">],</span> <span class="cm">/* C with cedilla    */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0108&#39;</span><span class="p">,</span> <span class="s1">&#39;LSLSS&#39;</span>  <span class="p">],</span> <span class="cm">/* C with circumflex */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0106&#39;</span><span class="p">,</span> <span class="s1">&#39;LSLSS&#39;</span>  <span class="p">],</span> <span class="cm">/* C with acute      */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0160&#39;</span><span class="p">,</span> <span class="s1">&#39;LLLL&#39;</span>   <span class="p">],</span> <span class="cm">/* S with caron      */</span>
-      <span class="p">[</span><span class="s1">&#39;\u00D0&#39;</span><span class="p">,</span> <span class="s1">&#39;SSLLS&#39;</span>  <span class="p">],</span> <span class="cm">/* Eth               */</span>
-      <span class="p">[</span><span class="s1">&#39;\u015A&#39;</span><span class="p">,</span> <span class="s1">&#39;SSSLSSS&#39;</span><span class="p">],</span> <span class="cm">/* S with acute      */</span>
-      <span class="p">[</span><span class="s1">&#39;\u00C8&#39;</span><span class="p">,</span> <span class="s1">&#39;SLSSL&#39;</span>  <span class="p">],</span> <span class="cm">/* E with grave      */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0141&#39;</span><span class="p">,</span> <span class="s1">&#39;SLSSL&#39;</span>  <span class="p">],</span> <span class="cm">/* L with stroke     */</span>
-      <span class="p">[</span><span class="s1">&#39;\u00C9&#39;</span><span class="p">,</span> <span class="s1">&#39;SSLSS&#39;</span>  <span class="p">],</span> <span class="cm">/* E with acute      */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0110&#39;</span><span class="p">,</span> <span class="s1">&#39;SSLSS&#39;</span>  <span class="p">],</span> <span class="cm">/* D with stroke     */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0118&#39;</span><span class="p">,</span> <span class="s1">&#39;SSLSS&#39;</span>  <span class="p">],</span> <span class="cm">/* E with ogonek     */</span>
-      <span class="p">[</span><span class="s1">&#39;\u011C&#39;</span><span class="p">,</span> <span class="s1">&#39;LLSLS&#39;</span>  <span class="p">],</span> <span class="cm">/* G with circumflex */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0124&#39;</span><span class="p">,</span> <span class="s1">&#39;LLLL&#39;</span>   <span class="p">],</span> <span class="cm">/* H with circumflex */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0134&#39;</span><span class="p">,</span> <span class="s1">&#39;SLLLS&#39;</span>  <span class="p">],</span> <span class="cm">/* J with circumflex */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0179&#39;</span><span class="p">,</span> <span class="s1">&#39;LLSSLS&#39;</span> <span class="p">],</span> <span class="cm">/* Z with acute      */</span>
-      <span class="p">[</span><span class="s1">&#39;\u00D1&#39;</span><span class="p">,</span> <span class="s1">&#39;LLSLL&#39;</span>  <span class="p">],</span> <span class="cm">/* N with tilde      */</span>
-      <span class="p">[</span><span class="s1">&#39;\u0143&#39;</span><span class="p">,</span> <span class="s1">&#39;LLSLL&#39;</span>  <span class="p">],</span> <span class="cm">/* N with acute      */</span>
-      <span class="p">[</span><span class="s1">&#39;\u00D6&#39;</span><span class="p">,</span> <span class="s1">&#39;LLLS&#39;</span>   <span class="p">],</span> <span class="cm">/* O with diaeresis  */</span>
-      <span class="p">[</span><span class="s1">&#39;\u00D8&#39;</span><span class="p">,</span> <span class="s1">&#39;LLLS&#39;</span>   <span class="p">],</span> <span class="cm">/* O with stroke     */</span>
-      <span class="p">[</span><span class="s1">&#39;\u00D3&#39;</span><span class="p">,</span> <span class="s1">&#39;LLLS&#39;</span>   <span class="p">],</span> <span class="cm">/* O with acute      */</span>
-      <span class="p">[</span><span class="s1">&#39;\u015C&#39;</span><span class="p">,</span> <span class="s1">&#39;SSSLS&#39;</span>  <span class="p">],</span> <span class="cm">/* S with circumflex */</span>
-      <span class="p">[</span><span class="s1">&#39;\u00DE&#39;</span><span class="p">,</span> <span class="s1">&#39;SLLSS&#39;</span>  <span class="p">],</span> <span class="cm">/* Thorn             */</span>
-      <span class="p">[</span><span class="s1">&#39;\u00DC&#39;</span><span class="p">,</span> <span class="s1">&#39;SSLL&#39;</span>   <span class="p">],</span> <span class="cm">/* U with diaeresis  */</span>
-      <span class="p">[</span><span class="s1">&#39;\u016C&#39;</span><span class="p">,</span> <span class="s1">&#39;SSLL&#39;</span>   <span class="p">],</span> <span class="cm">/* U with breve      */</span>
-      <span class="p">[</span><span class="s1">&#39;\u017B&#39;</span><span class="p">,</span> <span class="s1">&#39;LLSSL&#39;</span>  <span class="p">]</span>  <span class="cm">/* Z with dot above  */</span>
-    <span class="p">],</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Map of supported modes used to encode/decode messages. <br />
-This is a multi-dimensional array and should be treated as such.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">modes</span>         <span class="o">=</span> <span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Repeat a string the specified number of times.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="kd">function</span> <span class="nx">repeat</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">ret</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">num</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="nx">ret</span> <span class="o">+=</span> <span class="nx">str</span><span class="p">;</span>
-        <span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
-      <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Return the array of predefined modes.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">return</span> <span class="p">[</span>
-      <span class="cm">/* Name               | Chars                                      */</span>
-        <span class="p">[</span><span class="s1">&#39;classic&#39;</span><span class="p">,</span>          <span class="p">[</span><span class="s1">&#39;\u00B7&#39;</span><span class="p">,</span>       <span class="cm">/* Middle dot              */</span>
-                              <span class="s1">&#39;\u002D&#39;</span><span class="p">,</span>       <span class="cm">/* Hyphen-minus            */</span>
-                              <span class="s1">&#39;\u0020&#39;</span><span class="p">,</span>       <span class="cm">/* Space                   */</span>
-                       <span class="nx">repeat</span><span class="p">(</span><span class="s1">&#39;\u0020&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>   <span class="cm">/* Space (x3)              */</span>
-                       <span class="nx">repeat</span><span class="p">(</span><span class="s1">&#39;\u0020&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)]],</span> <span class="cm">/* Space (x7)              */</span>
-        <span class="p">[</span><span class="s1">&#39;classic-entities&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;&amp;middot;&#39;</span><span class="p">,</span>     <span class="cm">/* Middle dot              */</span>
-                              <span class="s1">&#39;&amp;#45;&#39;</span><span class="p">,</span>        <span class="cm">/* Hyphen-minus            */</span>
-                              <span class="s1">&#39;&amp;nbsp;&#39;</span><span class="p">,</span>       <span class="cm">/* Non-breaking space      */</span>
-                       <span class="nx">repeat</span><span class="p">(</span><span class="s1">&#39;&amp;nbsp;&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>   <span class="cm">/* Non-breaking space (x3) */</span>
-                       <span class="nx">repeat</span><span class="p">(</span><span class="s1">&#39;&amp;nbsp;&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)]],</span> <span class="cm">/* Non-breaking space (x7) */</span>
-        <span class="p">[</span><span class="s1">&#39;digital&#39;</span><span class="p">,</span>          <span class="p">[</span><span class="s1">&#39;\u0031&#39;</span><span class="p">,</span>       <span class="cm">/* 1                       */</span>
-                       <span class="nx">repeat</span><span class="p">(</span><span class="s1">&#39;\u0031&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>   <span class="cm">/* 1 (x3)                  */</span>
-                              <span class="s1">&#39;\u0030&#39;</span><span class="p">,</span>       <span class="cm">/* 0                       */</span>
-                       <span class="nx">repeat</span><span class="p">(</span><span class="s1">&#39;\u0030&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>   <span class="cm">/* 0 (x3)                  */</span>
-                       <span class="nx">repeat</span><span class="p">(</span><span class="s1">&#39;\u0030&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)]],</span> <span class="cm">/* 0 (x7)                  */</span>
-        <span class="p">[</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span>           <span class="p">[</span><span class="s1">&#39;\u0030&#39;</span><span class="p">,</span>       <span class="cm">/* 0                       */</span>
-                              <span class="s1">&#39;\u0031&#39;</span><span class="p">,</span>       <span class="cm">/* 1                       */</span>
-                              <span class="s1">&#39;&#39;</span><span class="p">,</span>             <span class="cm">/* &lt;Empty&gt;                 */</span>
-                              <span class="s1">&#39;\u002C&#39;</span><span class="p">,</span>       <span class="cm">/* Comma                   */</span>
-                              <span class="s1">&#39;\u0020&#39;</span><span class="p">]]</span>      <span class="cm">/* Space                   */</span>
-      <span class="p">];</span>
-    <span class="p">}()),</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Save the previous value of the <code>morjs</code> variable.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">previousMorjs</span> <span class="o">=</span> <span class="nx">root</span><span class="p">.</span><span class="nx">morjs</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h2>Private functions</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>Return the character mapping that matches the query provided.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">findChar</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p><code>query</code> is case-insensitive.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">query</span> <span class="o">=</span> <span class="nx">query</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">chars</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">chars</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">index</span><span class="p">]</span> <span class="o">===</span> <span class="nx">query</span><span class="p">)</span> <span class="k">return</span> <span class="nx">chars</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
-    <span class="p">}</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Return the <strong>last</strong> function in the arguments provided, where possible.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">findLastFunction</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">arguments</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="k">return</span> <span class="nx">arguments</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
-    <span class="p">}</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Return the mode mapping that matches the name provided. <br />
-If no name is specified, or no matching mode could be found, the
-<code>DEFAULT_MODE</code> will be returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">findMode</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">name</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p><code>name</code> is case-insensitive.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">();</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">modes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">modes</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">===</span> <span class="nx">name</span><span class="p">)</span> <span class="k">return</span> <span class="nx">modes</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">findMode</span><span class="p">(</span><span class="nx">DEFAULT_MODE</span><span class="p">);</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Parse a string by replacing any instances of the queries provided with
-their corresponding replacement strings.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">parse</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">query1</span><span class="p">,</span> <span class="nx">replacement1</span><span class="p">,</span> <span class="nx">query2</span><span class="p">,</span> <span class="nx">replacement2</span><span class="p">,</span> <span class="nx">spacer</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span>
-      <span class="nx">hasSpacer</span> <span class="o">=</span> <span class="k">typeof</span> <span class="nx">spacer</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
-      <span class="nx">ret</span>       <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">str</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>Insert spacer if provided and not first loop.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">if</span> <span class="p">(</span><span class="nx">hasSpacer</span> <span class="o">&amp;&amp;</span> <span class="nx">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">ret</span> <span class="o">+=</span> <span class="nx">spacer</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Swap queries with their replacements.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">switch</span> <span class="p">(</span><span class="nx">str</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="p">{</span>
-      <span class="k">case</span> <span class="nx">query1</span><span class="o">:</span>
-        <span class="nx">ret</span> <span class="o">+=</span> <span class="nx">replacement1</span><span class="p">;</span>
-        <span class="k">break</span><span class="p">;</span>
-      <span class="k">case</span> <span class="nx">query2</span><span class="o">:</span>
-        <span class="nx">ret</span> <span class="o">+=</span> <span class="nx">replacement2</span><span class="p">;</span>
-        <span class="k">break</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>Prepare the string to simplify encoding/decoding. <br />
-The return value is a multi-dimensional array and should be treated as
-such.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">prepare</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">wordSplitter</span><span class="p">,</span> <span class="nx">letterSplitter</span><span class="p">,</span> <span class="nx">charSplitter</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">str</span> <span class="o">!==</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Invalid value type: &#39;</span> <span class="o">+</span> <span class="k">typeof</span> <span class="nx">str</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="kd">var</span>
-      <span class="nx">hasCharSplitter</span> <span class="o">=</span> <span class="k">typeof</span> <span class="nx">charSplitter</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">,</span>
-      <span class="nx">ret</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">trim</span><span class="p">().</span><span class="nx">split</span><span class="p">(</span><span class="nx">wordSplitter</span><span class="p">);</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">ret</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">ret</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">split</span><span class="p">(</span><span class="nx">letterSplitter</span><span class="p">);</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">hasCharSplitter</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">ret</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">length</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">ret</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="nx">ret</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">].</span><span class="nx">split</span><span class="p">(</span><span class="nx">charSplitter</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>Safely handle cases where synchronization methodology may vary. <br />
-In cases where a callback function was specified it should be used to pass
-the return value of the function provided or any errors that were thrown
-during the process. Either the return value of the callback function or
-the error encountered will be returned here. <br />
-Otherwise; errors will be thrown as normal and the return value of the
-function will simply be returned. <br />
-When the function provided is called the specified context will be
-applied.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">syncSafe</span><span class="p">(</span><span class="nx">fn</span><span class="p">,</span> <span class="nx">cb</span><span class="p">,</span> <span class="nx">ctx</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">try</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">ret</span> <span class="o">=</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">ctx</span> <span class="o">||</span> <span class="k">this</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>All went OK, so handle result.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">cb</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="k">return</span> <span class="nx">cb</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">ret</span><span class="p">);</span>
-      <span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>Something went wrong, so bubble the error.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">cb</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="k">return</span> <span class="nx">cb</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
-      <span class="k">throw</span> <span class="nx">e</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <h2>mor.js setup</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>Build the publicly exposed API.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">morjs</span> <span class="o">=</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <h2>Constants</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>Current version of <code>morjs</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">VERSION</span><span class="o">:</span> <span class="s1">&#39;1.0.2&#39;</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <h2>Primary functions</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <p>Decode the message from Morse code to a human-readable message. <br />
-The message will not be decoded correctly if the mode used to decode the
-message is not the same as that used to encode it. <br />
-If no mode is specified <code>DEFAULT_MODE</code> will be used. <br />
-Optionally, a callback function can be provided which will be called
-with the result as the second argument. If an error occurs it will be
-passed as the first argument to this function, otherwise this argument
-will be <code>null</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">decode</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">callback</span> <span class="o">=</span> <span class="nx">findLastFunction</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
-      <span class="k">return</span> <span class="nx">syncSafe</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-        <span class="k">switch</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="s1">&#39;object&#39;</span><span class="o">:</span> <span class="k">break</span><span class="p">;</span>
-        <span class="k">case</span> <span class="s1">&#39;string&#39;</span><span class="o">:</span>
-          <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span><span class="nx">message</span><span class="o">:</span> <span class="nx">data</span><span class="p">};</span>
-          <span class="k">break</span><span class="p">;</span>
-        <span class="k">default</span><span class="o">:</span>
-          <span class="nx">data</span> <span class="o">=</span> <span class="p">{};</span>
-          <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">var</span> 
-          <span class="nx">mode</span>  <span class="o">=</span> <span class="nx">findMode</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">mode</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span>
-          <span class="nx">ret</span>   <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-          <span class="nx">value</span> <span class="o">=</span> <span class="nx">prepare</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">message</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nx">mode</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="nx">mode</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="nx">mode</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>Ensure message was prepared successfully.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">if</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <p>Iterate over each word.</p>             </td>             <td class="code">               <div class="highlight"><pre>          <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">value</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <p>Insert space between each word.</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">ret</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <p>Iterate over each character of word.</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">value</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">length</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <p>Reverse engineer pattern for character.</p>             </td>             <td class="code">               <div class="highlight"><pre>              <span class="kd">var</span> <span class="nx">pattern</span> <span class="o">=</span> <span class="nx">parse</span><span class="p">(</span><span class="nx">value</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">],</span> <span class="nx">mode</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">SHORT</span><span class="p">,</span> <span class="nx">mode</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">LONG</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <p>Check if pattern is supported.</p>             </td>             <td class="code">               <div class="highlight"><pre>              <span class="k">if</span> <span class="p">(</span><span class="nx">pattern</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <p>Retrieve first character matching the pattern.</p>             </td>             <td class="code">               <div class="highlight"><pre>                <span class="kd">var</span> <span class="nx">ch</span> <span class="o">=</span> <span class="nx">findChar</span><span class="p">(</span><span class="nx">pattern</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <p>Append character if it's supported.</p>             </td>             <td class="code">               <div class="highlight"><pre>                <span class="k">if</span> <span class="p">(</span><span class="nx">ch</span><span class="p">)</span> <span class="nx">ret</span> <span class="o">+=</span> <span class="nx">ch</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-              <span class="p">}</span>
-            <span class="p">}</span>
-          <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
-      <span class="p">},</span> <span class="nx">callback</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
-    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <p>Encode the message in to the Morse code. <br />
-If no mode is specified <code>DEFAULT_MODE</code> will be used. <br />
-Optionally, a callback function can be provided which will be called
-with the result as the second argument. If an error occurs it will be
-passed as the first argument to this function, otherwise this argument
-will be <code>null</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">encode</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">callback</span> <span class="o">=</span> <span class="nx">findLastFunction</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
-      <span class="k">return</span> <span class="nx">syncSafe</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-        <span class="k">switch</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="s1">&#39;object&#39;</span><span class="o">:</span> <span class="k">break</span><span class="p">;</span>
-        <span class="k">case</span> <span class="s1">&#39;string&#39;</span><span class="o">:</span>
-          <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span><span class="nx">message</span><span class="o">:</span> <span class="nx">data</span><span class="p">};</span>
-          <span class="k">break</span><span class="p">;</span>
-        <span class="k">default</span><span class="o">:</span>
-          <span class="nx">data</span> <span class="o">=</span> <span class="p">{};</span>
-          <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">var</span>
-          <span class="nx">mode</span>  <span class="o">=</span> <span class="nx">findMode</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">mode</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span>
-          <span class="nx">ret</span>   <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-          <span class="nx">value</span> <span class="o">=</span> <span class="nx">prepare</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">message</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="sr">/\s+/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-40">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>               <p>Ensure message was prepared successfully.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">if</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-41">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-41">&#182;</a>               </div>               <p>Iterate over each word.</p>             </td>             <td class="code">               <div class="highlight"><pre>          <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">value</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-42">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-42">&#182;</a>               </div>               <p>Insert medium gap between each word.</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">ret</span> <span class="o">+=</span> <span class="nx">mode</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span></pre></div>             </td>           </tr>                               <tr id="section-43">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>               <p>Iterate over each character of word</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">value</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">length</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-44">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>               <p>Insert short gap between each letter.</p>             </td>             <td class="code">               <div class="highlight"><pre>              <span class="k">if</span> <span class="p">(</span><span class="nx">j</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">ret</span> <span class="o">+=</span> <span class="nx">mode</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span></pre></div>             </td>           </tr>                               <tr id="section-45">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-45">&#182;</a>               </div>               <p>Retrieve first character matching the character.</p>             </td>             <td class="code">               <div class="highlight"><pre>              <span class="kd">var</span> <span class="nx">ch</span> <span class="o">=</span> <span class="nx">findChar</span><span class="p">(</span><span class="nx">value</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="nx">j</span><span class="p">],</span> <span class="mi">0</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-46">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-46">&#182;</a>               </div>               <p>Parse pattern for character if it's supported.</p>             </td>             <td class="code">               <div class="highlight"><pre>              <span class="k">if</span> <span class="p">(</span><span class="nx">ch</span><span class="p">)</span> <span class="nx">ret</span> <span class="o">+=</span> <span class="nx">parse</span><span class="p">(</span><span class="nx">ch</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">SHORT</span><span class="p">,</span> <span class="nx">mode</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">LONG</span><span class="p">,</span> <span class="nx">mode</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                  <span class="nx">mode</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
-            <span class="p">}</span>
-          <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
-      <span class="p">},</span> <span class="nx">callback</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
-    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-47">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-47">&#182;</a>               </div>               <h2>Customization functions</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-48">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-48">&#182;</a>               </div>               <p>Map a new pattern to the character provided. <br />
-If a mapping already exists for the specified character, that mapping
-will be modified. <br />
-Optionally, a callback function can be provided which will be called
-when the character has been defined. If an error occurs it will be
-passed as the first argument to this function, otherwise this argument
-will be <code>null</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">defineChar</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">character</span><span class="p">,</span> <span class="nx">pattern</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">syncSafe</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-49">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-49">&#182;</a>               </div>               <p>Type-check arguments provided.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">character</span> <span class="o">!==</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Invalid character type: &#39;</span> <span class="o">+</span> <span class="k">typeof</span> <span class="nx">character</span><span class="p">);</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">pattern</span> <span class="o">!==</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Invalid pattern type: &#39;</span> <span class="o">+</span> <span class="k">typeof</span> <span class="nx">pattern</span><span class="p">);</span>
-        <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-50">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-50">&#182;</a>               </div>               <p><code>character</code> must be singular.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">if</span> <span class="p">(</span><span class="nx">character</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Invalid character length: &#39;</span> <span class="o">+</span> <span class="nx">character</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="kd">var</span> <span class="nx">ucPattern</span> <span class="o">=</span> <span class="nx">pattern</span><span class="p">.</span><span class="nx">trim</span><span class="p">().</span><span class="nx">toUpperCase</span><span class="p">();</span></pre></div>             </td>           </tr>                               <tr id="section-51">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-51">&#182;</a>               </div>               <p><code>pattern</code> must only contain <code>S</code> &amp; <code>L</code> characters and must contain at
-least one of either.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="sr">/^[SL]+$/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">ucPattern</span><span class="p">))</span> <span class="p">{</span>
-          <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Invalid pattern: &#39;</span> <span class="o">+</span> <span class="nx">pattern</span><span class="p">);</span>
-        <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-52">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-52">&#182;</a>               </div>               <p>Update existing character mapping or create new one.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">character</span> <span class="o">=</span> <span class="nx">character</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();</span>
-        <span class="kd">var</span> <span class="nx">existingChar</span> <span class="o">=</span> <span class="nx">findChar</span><span class="p">(</span><span class="nx">character</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">existingChar</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">existingChar</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">ucPattern</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-          <span class="nx">chars</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="nx">character</span><span class="p">,</span> <span class="nx">ucPattern</span><span class="p">]);</span>
-        <span class="p">}</span>
-      <span class="p">},</span> <span class="nx">callback</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
-    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-53">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-53">&#182;</a>               </div>               <p>Map new characters to the mode provided. <br />
-If a mode already exists for the specified name, that mode's character
-mapping will be modified. <br />
-The elements of <code>characters</code> should be specified in the following order;</p>
+<!DOCTYPE html>
 
-<ul>
-<li>Short mark (dot)</li>
-<li>Longer mark (dash)</li>
-<li>Intra-character gap (between dots and dashes within a character)</li>
-<li>Short gap (between letters)</li>
-<li>Medium gap (between words)</li>
-</ul>
+<html>
+<head>
+  <title>mor.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>mor.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p><a href="http://neocotic.com/mor.js">mor.js</a> 1.1.0</p>
+<p>(c) 2014 Alasdair Mercer</p>
+<p>Freely distributable under the MIT license.</p>
+<p>For all details and documentation:</p>
+<p><a href="http://neocotic.com/mor.js">http://neocotic.com/mor.js</a></p>
 
-<p>Optionally, a callback function can be provided which will be called
-when the mode has been defined. If an error occurs it will be passed as
-the first argument to this function, otherwise this argument will be
-<code>null</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">defineMode</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">characters</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">syncSafe</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-54">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-54">&#182;</a>               </div>               <p>Type-check arguments provided.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">name</span> <span class="o">!==</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Invalid name type: &#39;</span> <span class="o">+</span> <span class="k">typeof</span> <span class="nx">name</span><span class="p">);</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">characters</span> <span class="o">!==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Invalid characters type: &#39;</span> <span class="o">+</span> <span class="k">typeof</span> <span class="nx">characters</span><span class="p">);</span>
-        <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-55">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-55">&#182;</a>               </div>               <p><code>characters</code> must contain all required character replacements.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">if</span> <span class="p">(</span><span class="nx">characters</span><span class="p">.</span><span class="nx">length</span> <span class="o">!==</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Invalid characters length: &#39;</span> <span class="o">+</span> <span class="nx">characters</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
-        <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-56">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-56">&#182;</a>               </div>               <p>Iterate over each character in <code>characters</code>, validating each one.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">character</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">characters</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">character</span> <span class="o">=</span> <span class="nx">characters</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span></pre></div>             </td>           </tr>                               <tr id="section-57">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-57">&#182;</a>               </div>               <p><code>character</code> must be a string.</p>             </td>             <td class="code">               <div class="highlight"><pre>          <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">character</span> <span class="o">!==</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Invalid character type at [&#39;</span> <span class="o">+</span> <span class="nx">i</span> <span class="o">+</span> <span class="s1">&#39;]: &#39;</span> <span class="o">+</span>
-                <span class="k">typeof</span> <span class="nx">character</span><span class="p">);</span>
-          <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-58">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-58">&#182;</a>               </div>               <p><code>character</code> cannot contain either <code>S</code> or <code>L</code> characters.</p>             </td>             <td class="code">               <div class="highlight"><pre>          <span class="nx">character</span> <span class="o">=</span> <span class="nx">character</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">();</span>
-          <span class="k">if</span> <span class="p">(</span><span class="nx">character</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">LONG</span><span class="p">)</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Invalid character found at [&#39;</span> <span class="o">+</span> <span class="nx">i</span> <span class="o">+</span> <span class="s1">&#39;]: &#39;</span> <span class="o">+</span> <span class="nx">LONG</span><span class="p">);</span>
-          <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">character</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">SHORT</span><span class="p">)</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Invalid character found at [&#39;</span> <span class="o">+</span> <span class="nx">i</span> <span class="o">+</span> <span class="s1">&#39;]: &#39;</span> <span class="o">+</span>
-                <span class="nx">SHORT</span><span class="p">);</span>
-          <span class="p">}</span>
-        <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-59">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-59">&#182;</a>               </div>               <p>Update existing mode mapping or create new one.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">();</span>
-        <span class="kd">var</span> <span class="nx">existingMode</span> <span class="o">=</span> <span class="nx">findMode</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">existingMode</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">existingMode</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">characters</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-          <span class="nx">modes</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="nx">name</span><span class="p">,</span> <span class="nx">characters</span><span class="p">]);</span>
-        <span class="p">}</span>
-      <span class="p">},</span> <span class="nx">callback</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
-    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-60">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-60">&#182;</a>               </div>               <h2>Utility functions</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-61">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-61">&#182;</a>               </div>               <p>Return a read-only copy of the character mappings currently loaded.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">chars</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">syncSafe</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">ret</span> <span class="o">=</span> <span class="p">[];</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">chars</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">chars</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
-        <span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
-      <span class="p">},</span> <span class="nx">callback</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
-    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-62">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-62">&#182;</a>               </div>               <p>Return a read-only copy of the modes currently loaded.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">modes</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">syncSafe</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">ret</span> <span class="o">=</span> <span class="p">[];</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">modes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">modes</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
-        <span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
-      <span class="p">},</span> <span class="nx">callback</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
-    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-63">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-63">&#182;</a>               </div>               <p>Run mor.js in <em>noConflict</em> mode, returning the <code>morjs</code> variable to its
-previous owner. <br />
-Returns a reference to <code>morjs</code>. <br />
-Optionally, a callback function can be provided which will be called
-after the ownership has been restored. If an error occurs it will be
-passed as the first argument to this function, otherwise this argument
-will be <code>null</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">noConflict</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">syncSafe</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-        <span class="nx">root</span><span class="p">.</span><span class="nx">morjs</span> <span class="o">=</span> <span class="nx">previousMorjs</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-      <span class="p">},</span> <span class="nx">callback</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
-    <span class="p">}</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(root)</span> </span>{
+<span class="hljs-pi">
+  'use strict'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2 id="private-constants">Private constants</h2>
 
-  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-64">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-64">&#182;</a>               </div>               <p>Export <code>morjs</code> for NodeJS and CommonJS.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">exports</span> <span class="o">=</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">morjs</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="nx">exports</span><span class="p">.</span><span class="nx">morjs</span> <span class="o">=</span> <span class="nx">morjs</span><span class="p">;</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">define</span><span class="p">(</span><span class="s1">&#39;morjs&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">morjs</span><span class="p">;</span>
-    <span class="p">});</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="nx">root</span><span class="p">.</span><span class="nx">morjs</span> <span class="o">=</span> <span class="nx">morjs</span><span class="p">;</span>
-  <span class="p">}</span>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Pattern placeholder for long marks.</p>
 
-<span class="p">}(</span><span class="k">this</span><span class="p">));</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> LONG = <span class="hljs-string">'L'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Pattern placeholder for short marks.</p>
 
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> SHORT = <span class="hljs-string">'S'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h2 id="private-variables">Private variables</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Save the previous value of the <code>morjs</code> variable.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> previousMorjs = root.morjs;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h2 id="private-functions">Private functions</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Iterator over a given <code>list</code> and yield each element in turn to an <code>iterator</code> function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> each = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(list, iterator)</span> </span>{
+    <span class="hljs-keyword">if</span> (!list) {
+      <span class="hljs-keyword">return</span>;
+    }
+
+    <span class="hljs-keyword">var</span> length = list.length;
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>; index &lt; length; index++) {
+      iterator(list[index], index, list);
+    }
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Return the character mapped to the specified <code>pattern</code> where possible.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> getCharacter = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(pattern)</span> </span>{
+    pattern = pattern.toLocaleUpperCase();
+
+    <span class="hljs-keyword">var</span> character;
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> chars) {
+      <span class="hljs-keyword">if</span> (chars.hasOwnProperty(key) &amp;&amp; chars[key] === pattern) {
+        character = key;
+        <span class="hljs-keyword">break</span>;
+      }
+    }
+
+
+    <span class="hljs-keyword">return</span> character;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Return the mode mapping that matches the name provided.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> getMode = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name)</span> </span>{
+    <span class="hljs-keyword">return</span> modes[name];
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Return the given <code>options</code> with all of the <code>defaults</code> applied.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> getOptions = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options, defaults)</span> </span>{
+    options = options || {};
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> defaults) {
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> options[key] === <span class="hljs-string">'undefined'</span>) {
+        options[key] = defaults[key];
+      }
+    }
+
+    <span class="hljs-keyword">return</span> options;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Return the pattern mapped to the specified <code>character</code> where possible.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> getPattern = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character)</span> </span>{
+    <span class="hljs-keyword">return</span> chars[character.toLocaleUpperCase()];
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Parse a string by replacing any instances of the queries provided with their corresponding replacement strings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> parse = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(str, query1, replacement1, query2, replacement2, spacer)</span> </span>{
+    <span class="hljs-keyword">var</span> hasSpacer = <span class="hljs-keyword">typeof</span> spacer === <span class="hljs-string">'string'</span>;
+    <span class="hljs-keyword">var</span> rQuery    = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'('</span> + query1 + <span class="hljs-string">'|'</span> + query2 + <span class="hljs-string">')'</span>, <span class="hljs-string">'g'</span>);
+    <span class="hljs-keyword">var</span> result    = <span class="hljs-string">''</span>;
+
+    each(str.match(rQuery), <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(substr, i)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Insert spacer if provided and not first loop.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (hasSpacer &amp;&amp; i &gt; <span class="hljs-number">0</span>) {
+        result += spacer;
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Swap queries with their replacements while maintaining new lines.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (substr === query1) {
+        result += replacement1;
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (substr === query2) {
+        result += replacement2;
+      }
+    });
+
+    <span class="hljs-keyword">return</span> result;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Prepare the string to simplify encoding/decoding.
+The return value is a multi-dimensional array and should be treated as such.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> prepare = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(str, wordSplitter, letterSplitter, charSplitter)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> str !== <span class="hljs-string">'string'</span>) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">'Invalid value type: '</span> + <span class="hljs-keyword">typeof</span> str);
+    }
+
+    <span class="hljs-keyword">var</span> hasCharSplitter = <span class="hljs-keyword">typeof</span> charSplitter !== <span class="hljs-string">'undefined'</span>;
+    <span class="hljs-keyword">var</span> rWordSplitter   = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(wordSplitter + <span class="hljs-string">'|[\\n\\r]+'</span>, <span class="hljs-string">'g'</span>);
+    <span class="hljs-keyword">var</span> result          = str.trim().split(rWordSplitter);
+
+    each(result, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(word, i)</span> </span>{
+      result[i] = word = word.split(letterSplitter);
+
+      <span class="hljs-keyword">if</span> (hasCharSplitter) {
+        each(word, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(ch, j)</span> </span>{
+          result[i][j] = ch.split(charSplitter).join(<span class="hljs-string">''</span>);
+        });
+      }
+    });
+
+    <span class="hljs-keyword">return</span> result;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Repeat a string the specified number of <code>times</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> repeat = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(str, times)</span> </span>{
+    <span class="hljs-keyword">if</span> (!str) {
+      <span class="hljs-keyword">return</span> str;
+    }
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>, result = <span class="hljs-string">''</span>; index &lt; times; index++) {
+      result += str;
+    }
+
+    <span class="hljs-keyword">return</span> result;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h2 id="characters">Characters</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Map of Morse code patterns to supported characters.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> chars = {
+  <span class="hljs-comment">/* Letters                                    */</span>
+    <span class="hljs-string">'\u0041'</span>: <span class="hljs-string">'SL'</span>,      <span class="hljs-comment">/* A                   */</span>
+    <span class="hljs-string">'\u0042'</span>: <span class="hljs-string">'LSSS'</span>,    <span class="hljs-comment">/* B                   */</span>
+    <span class="hljs-string">'\u0043'</span>: <span class="hljs-string">'LSLS'</span>,    <span class="hljs-comment">/* C                   */</span>
+    <span class="hljs-string">'\u0044'</span>: <span class="hljs-string">'LSS'</span>,     <span class="hljs-comment">/* D                   */</span>
+    <span class="hljs-string">'\u0045'</span>: <span class="hljs-string">'S'</span>,       <span class="hljs-comment">/* E                   */</span>
+    <span class="hljs-string">'\u0046'</span>: <span class="hljs-string">'SSLS'</span>,    <span class="hljs-comment">/* F                   */</span>
+    <span class="hljs-string">'\u0047'</span>: <span class="hljs-string">'LLS'</span>,     <span class="hljs-comment">/* G                   */</span>
+    <span class="hljs-string">'\u0048'</span>: <span class="hljs-string">'SSSS'</span>,    <span class="hljs-comment">/* H                   */</span>
+    <span class="hljs-string">'\u0049'</span>: <span class="hljs-string">'SS'</span>,      <span class="hljs-comment">/* I                   */</span>
+    <span class="hljs-string">'\u004A'</span>: <span class="hljs-string">'SLLL'</span>,    <span class="hljs-comment">/* J                   */</span>
+    <span class="hljs-string">'\u004B'</span>: <span class="hljs-string">'LSL'</span>,     <span class="hljs-comment">/* K                   */</span>
+    <span class="hljs-string">'\u004C'</span>: <span class="hljs-string">'SLSS'</span>,    <span class="hljs-comment">/* L                   */</span>
+    <span class="hljs-string">'\u004D'</span>: <span class="hljs-string">'LL'</span>,      <span class="hljs-comment">/* M                   */</span>
+    <span class="hljs-string">'\u004E'</span>: <span class="hljs-string">'LS'</span>,      <span class="hljs-comment">/* N                   */</span>
+    <span class="hljs-string">'\u004F'</span>: <span class="hljs-string">'LLL'</span>,     <span class="hljs-comment">/* O                   */</span>
+    <span class="hljs-string">'\u0050'</span>: <span class="hljs-string">'SLLS'</span>,    <span class="hljs-comment">/* P                   */</span>
+    <span class="hljs-string">'\u0051'</span>: <span class="hljs-string">'LLSL'</span>,    <span class="hljs-comment">/* Q                   */</span>
+    <span class="hljs-string">'\u0052'</span>: <span class="hljs-string">'SLS'</span>,     <span class="hljs-comment">/* R                   */</span>
+    <span class="hljs-string">'\u0053'</span>: <span class="hljs-string">'SSS'</span>,     <span class="hljs-comment">/* S                   */</span>
+    <span class="hljs-string">'\u0054'</span>: <span class="hljs-string">'L'</span>,       <span class="hljs-comment">/* T                   */</span>
+    <span class="hljs-string">'\u0055'</span>: <span class="hljs-string">'SSL'</span>,     <span class="hljs-comment">/* U                   */</span>
+    <span class="hljs-string">'\u0056'</span>: <span class="hljs-string">'SSSL'</span>,    <span class="hljs-comment">/* V                   */</span>
+    <span class="hljs-string">'\u0057'</span>: <span class="hljs-string">'SLL'</span>,     <span class="hljs-comment">/* W                   */</span>
+    <span class="hljs-string">'\u0058'</span>: <span class="hljs-string">'LSSL'</span>,    <span class="hljs-comment">/* X                   */</span>
+    <span class="hljs-string">'\u0059'</span>: <span class="hljs-string">'LSLL'</span>,    <span class="hljs-comment">/* Y                   */</span>
+    <span class="hljs-string">'\u005A'</span>: <span class="hljs-string">'LLSS'</span>,    <span class="hljs-comment">/* Z                   */</span>
+  <span class="hljs-comment">/* Numbers                                    */</span>
+    <span class="hljs-string">'\u0030'</span>: <span class="hljs-string">'LLLLL'</span>,   <span class="hljs-comment">/* 0                   */</span>
+    <span class="hljs-string">'\u0031'</span>: <span class="hljs-string">'SLLLL'</span>,   <span class="hljs-comment">/* 1                   */</span>
+    <span class="hljs-string">'\u0032'</span>: <span class="hljs-string">'SSLLL'</span>,   <span class="hljs-comment">/* 2                   */</span>
+    <span class="hljs-string">'\u0033'</span>: <span class="hljs-string">'SSSLL'</span>,   <span class="hljs-comment">/* 3                   */</span>
+    <span class="hljs-string">'\u0034'</span>: <span class="hljs-string">'SSSSL'</span>,   <span class="hljs-comment">/* 4                   */</span>
+    <span class="hljs-string">'\u0035'</span>: <span class="hljs-string">'SSSSS'</span>,   <span class="hljs-comment">/* 5                   */</span>
+    <span class="hljs-string">'\u0036'</span>: <span class="hljs-string">'LSSSS'</span>,   <span class="hljs-comment">/* 6                   */</span>
+    <span class="hljs-string">'\u0037'</span>: <span class="hljs-string">'LLSSS'</span>,   <span class="hljs-comment">/* 7                   */</span>
+    <span class="hljs-string">'\u0038'</span>: <span class="hljs-string">'LLLSS'</span>,   <span class="hljs-comment">/* 8                   */</span>
+    <span class="hljs-string">'\u0039'</span>: <span class="hljs-string">'LLLLS'</span>,   <span class="hljs-comment">/* 9                   */</span>
+  <span class="hljs-comment">/* Punctuation                                */</span>
+    <span class="hljs-string">'\u002E'</span>: <span class="hljs-string">'SLSLSL'</span>,  <span class="hljs-comment">/* Full stop           */</span>
+    <span class="hljs-string">'\u002C'</span>: <span class="hljs-string">'LLSSLL'</span>,  <span class="hljs-comment">/* Comma               */</span>
+    <span class="hljs-string">'\u003F'</span>: <span class="hljs-string">'SSLLSS'</span>,  <span class="hljs-comment">/* Question mark       */</span>
+    <span class="hljs-string">'\u0027'</span>: <span class="hljs-string">'SLLLLS'</span>,  <span class="hljs-comment">/* Apostrophe          */</span>
+    <span class="hljs-string">'\u0021'</span>: <span class="hljs-string">'LSLSLL'</span>,  <span class="hljs-comment">/* Exclamation mark    */</span>
+    <span class="hljs-string">'\u002F'</span>: <span class="hljs-string">'LSSLS'</span>,   <span class="hljs-comment">/* Slash               */</span>
+    <span class="hljs-string">'\u0028'</span>: <span class="hljs-string">'LSLLS'</span>,   <span class="hljs-comment">/* Left parenthesis    */</span>
+    <span class="hljs-string">'\u0029'</span>: <span class="hljs-string">'LSLLSL'</span>,  <span class="hljs-comment">/* Right parenthesis   */</span>
+    <span class="hljs-string">'\u0026'</span>: <span class="hljs-string">'SLSSS'</span>,   <span class="hljs-comment">/* Ampersand           */</span>
+    <span class="hljs-string">'\u003A'</span>: <span class="hljs-string">'LLLSSS'</span>,  <span class="hljs-comment">/* Colon               */</span>
+    <span class="hljs-string">'\u003B'</span>: <span class="hljs-string">'LSLSLS'</span>,  <span class="hljs-comment">/* Semicolon           */</span>
+    <span class="hljs-string">'\u003D'</span>: <span class="hljs-string">'LSSSL'</span>,   <span class="hljs-comment">/* Equal sign          */</span>
+    <span class="hljs-string">'\u002B'</span>: <span class="hljs-string">'SLSLS'</span>,   <span class="hljs-comment">/* Plus sign           */</span>
+    <span class="hljs-string">'\u002D'</span>: <span class="hljs-string">'LSSSSL'</span>,  <span class="hljs-comment">/* Hyphen-minus        */</span>
+    <span class="hljs-string">'\u005F'</span>: <span class="hljs-string">'SSLLSL'</span>,  <span class="hljs-comment">/* Low line            */</span>
+    <span class="hljs-string">'\u0022'</span>: <span class="hljs-string">'SLSSLS'</span>,  <span class="hljs-comment">/* Quotation mark      */</span>
+    <span class="hljs-string">'\u0024'</span>: <span class="hljs-string">'SSSLSSL'</span>, <span class="hljs-comment">/* Dollar sign         */</span>
+    <span class="hljs-string">'\u0040'</span>: <span class="hljs-string">'SLLSLS'</span>,  <span class="hljs-comment">/* At sign             */</span>
+  <span class="hljs-comment">/* Non-English extensions                     */</span>
+    <span class="hljs-string">'\u00C4'</span>: <span class="hljs-string">'SLSL'</span>,    <span class="hljs-comment">/* A with diaeresis    */</span>
+    <span class="hljs-string">'\u00C6'</span>: <span class="hljs-string">'SLSL'</span>,    <span class="hljs-comment">/* A and E as grapheme */</span>
+    <span class="hljs-string">'\u0104'</span>: <span class="hljs-string">'SLSL'</span>,    <span class="hljs-comment">/* A with ogonek       */</span>
+    <span class="hljs-string">'\u00C0'</span>: <span class="hljs-string">'SLLSL'</span>,   <span class="hljs-comment">/* A with grave        */</span>
+    <span class="hljs-string">'\u00C5'</span>: <span class="hljs-string">'SLLSL'</span>,   <span class="hljs-comment">/* A with ring above   */</span>
+    <span class="hljs-string">'\u00C7'</span>: <span class="hljs-string">'LSLSS'</span>,   <span class="hljs-comment">/* C with cedilla      */</span>
+    <span class="hljs-string">'\u0108'</span>: <span class="hljs-string">'LSLSS'</span>,   <span class="hljs-comment">/* C with circumflex   */</span>
+    <span class="hljs-string">'\u0106'</span>: <span class="hljs-string">'LSLSS'</span>,   <span class="hljs-comment">/* C with acute        */</span>
+    <span class="hljs-string">'\u0160'</span>: <span class="hljs-string">'LLLL'</span>,    <span class="hljs-comment">/* S with caron        */</span>
+    <span class="hljs-string">'\u00D0'</span>: <span class="hljs-string">'SSLLS'</span>,   <span class="hljs-comment">/* Eth                 */</span>
+    <span class="hljs-string">'\u015A'</span>: <span class="hljs-string">'SSSLSSS'</span>, <span class="hljs-comment">/* S with acute        */</span>
+    <span class="hljs-string">'\u00C8'</span>: <span class="hljs-string">'SLSSL'</span>,   <span class="hljs-comment">/* E with grave        */</span>
+    <span class="hljs-string">'\u0141'</span>: <span class="hljs-string">'SLSSL'</span>,   <span class="hljs-comment">/* L with stroke       */</span>
+    <span class="hljs-string">'\u00C9'</span>: <span class="hljs-string">'SSLSS'</span>,   <span class="hljs-comment">/* E with acute        */</span>
+    <span class="hljs-string">'\u0110'</span>: <span class="hljs-string">'SSLSS'</span>,   <span class="hljs-comment">/* D with stroke       */</span>
+    <span class="hljs-string">'\u0118'</span>: <span class="hljs-string">'SSLSS'</span>,   <span class="hljs-comment">/* E with ogonek       */</span>
+    <span class="hljs-string">'\u011C'</span>: <span class="hljs-string">'LLSLS'</span>,   <span class="hljs-comment">/* G with circumflex   */</span>
+    <span class="hljs-string">'\u0124'</span>: <span class="hljs-string">'LLLL'</span>,    <span class="hljs-comment">/* H with circumflex   */</span>
+    <span class="hljs-string">'\u0134'</span>: <span class="hljs-string">'SLLLS'</span>,   <span class="hljs-comment">/* J with circumflex   */</span>
+    <span class="hljs-string">'\u0179'</span>: <span class="hljs-string">'LLSSLS'</span>,  <span class="hljs-comment">/* Z with acute        */</span>
+    <span class="hljs-string">'\u00D1'</span>: <span class="hljs-string">'LLSLL'</span>,   <span class="hljs-comment">/* N with tilde        */</span>
+    <span class="hljs-string">'\u0143'</span>: <span class="hljs-string">'LLSLL'</span>,   <span class="hljs-comment">/* N with acute        */</span>
+    <span class="hljs-string">'\u00D6'</span>: <span class="hljs-string">'LLLS'</span>,    <span class="hljs-comment">/* O with diaeresis    */</span>
+    <span class="hljs-string">'\u00D8'</span>: <span class="hljs-string">'LLLS'</span>,    <span class="hljs-comment">/* O with stroke       */</span>
+    <span class="hljs-string">'\u00D3'</span>: <span class="hljs-string">'LLLS'</span>,    <span class="hljs-comment">/* O with acute        */</span>
+    <span class="hljs-string">'\u015C'</span>: <span class="hljs-string">'SSSLS'</span>,   <span class="hljs-comment">/* S with circumflex   */</span>
+    <span class="hljs-string">'\u00DE'</span>: <span class="hljs-string">'SLLSS'</span>,   <span class="hljs-comment">/* Thorn               */</span>
+    <span class="hljs-string">'\u00DC'</span>: <span class="hljs-string">'SSLL'</span>,    <span class="hljs-comment">/* U with diaeresis    */</span>
+    <span class="hljs-string">'\u016C'</span>: <span class="hljs-string">'SSLL'</span>,    <span class="hljs-comment">/* U with breve        */</span>
+    <span class="hljs-string">'\u017B'</span>: <span class="hljs-string">'LLSSL'</span>    <span class="hljs-comment">/* Z with dot above    */</span>
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <h2 id="modes">Modes</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Map of supported modes used to encode/decode messages.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> modes = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Classic “dot” and “dash” output.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    classic: {
+      charSpacer:          <span class="hljs-string">'\u0020'</span>,     <span class="hljs-comment">/* Space                   */</span>
+      letterSpacer: repeat(<span class="hljs-string">'\u0020'</span>, <span class="hljs-number">3</span>), <span class="hljs-comment">/* Space (x3)              */</span>
+      longString:          <span class="hljs-string">'\u002D'</span>,     <span class="hljs-comment">/* Hyphen-minus            */</span>
+      shortString:         <span class="hljs-string">'\u00B7'</span>,     <span class="hljs-comment">/* Middle dot              */</span>
+      wordSpacer:   repeat(<span class="hljs-string">'\u0020'</span>, <span class="hljs-number">7</span>)  <span class="hljs-comment">/* Space (x7)              */</span>
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Same as the <em>classic</em> mode except outputs xml entities instead of unicode characters.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    classicEntities: {
+      charSpacer:          <span class="hljs-string">'&amp;nbsp;'</span>,     <span class="hljs-comment">/* Non-breaking space      */</span>
+      letterSpacer: repeat(<span class="hljs-string">'&amp;nbsp;'</span>, <span class="hljs-number">3</span>), <span class="hljs-comment">/* Non-breaking space (x3) */</span>
+      longString:          <span class="hljs-string">'&amp;#45;'</span>,      <span class="hljs-comment">/* Hyphen-minus            */</span>
+      shortString:         <span class="hljs-string">'&amp;middot;'</span>,   <span class="hljs-comment">/* Middle dot              */</span>
+      wordSpacer:   repeat(<span class="hljs-string">'&amp;nbsp;'</span>, <span class="hljs-number">7</span>)  <span class="hljs-comment">/* Non-breaking space (x7) */</span>
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Compact version of the <em>classic</em> mode with reduced whitespace.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    compact: {
+      charSpacer:          <span class="hljs-string">''</span>,           <span class="hljs-comment">/* &lt;Empty&gt;                 */</span>
+      letterSpacer:        <span class="hljs-string">'\u0020'</span>,     <span class="hljs-comment">/* Space                   */</span>
+      longString:          <span class="hljs-string">'\u002D'</span>,     <span class="hljs-comment">/* Hyphen-minus            */</span>
+      shortString:         <span class="hljs-string">'\u00B7'</span>,     <span class="hljs-comment">/* Middle dot              */</span>
+      wordSpacer:   repeat(<span class="hljs-string">'\u0020'</span>, <span class="hljs-number">3</span>)  <span class="hljs-comment">/* Space (x3)              */</span>
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Compact version of the <em>classicEntities</em> mode with reduced whitespace.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    compactEntities: {
+      charSpacer:          <span class="hljs-string">''</span>,           <span class="hljs-comment">/* &lt;Empty&gt;                 */</span>
+      letterSpacer:        <span class="hljs-string">'&amp;nbsp;'</span>,     <span class="hljs-comment">/* Non-breaking space      */</span>
+      longString:          <span class="hljs-string">'&amp;#45;'</span>,      <span class="hljs-comment">/* Hyphen-minus            */</span>
+      shortString:         <span class="hljs-string">'&amp;middot;'</span>,   <span class="hljs-comment">/* Middle dot              */</span>
+      wordSpacer:   repeat(<span class="hljs-string">'&amp;nbsp;'</span>, <span class="hljs-number">3</span>)  <span class="hljs-comment">/* Non-breaking space (x3) */</span>
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Simple output using a plain hyphen and full stop mixed using a single space to split letters and a new line for
+words.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    simple: {
+      charSpacer:          <span class="hljs-string">''</span>,           <span class="hljs-comment">/* &lt;Empty&gt;                 */</span>
+      letterSpacer:        <span class="hljs-string">'\u0020'</span>,     <span class="hljs-comment">/* Space                   */</span>
+      longString:          <span class="hljs-string">'\u002D'</span>,     <span class="hljs-comment">/* Hyphen-minus            */</span>
+      shortString:         <span class="hljs-string">'\u002E'</span>,     <span class="hljs-comment">/* Full stop               */</span>
+      wordSpacer:   repeat(<span class="hljs-string">'\u0020'</span>, <span class="hljs-number">3</span>)  <span class="hljs-comment">/* Space (x3)              */</span>
+    }
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <h2 id="mor-js-setup">mor.js setup</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Build the publicly exposed API.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> morjs = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <h2 id="constants">Constants</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>Current version of <code>morjs</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    VERSION: <span class="hljs-string">'1.1.0'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <h2 id="variables">Variables</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>Expose the available character mappings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    chars: chars,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Default values to be used if no options are specified or are incomplete.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    defaults: {
+      mode: <span class="hljs-string">'compact'</span>
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Expose the available modes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    modes: modes,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <h2 id="primary-functions">Primary functions</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>Decode the <code>message</code> provided from Morse code to a human-readable message.
+The message will not be decoded correctly if the mode used to decode the message is not the same as that used to
+encode it.
+If the <code>mode</code> option is not specified, the default mode will be used.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    decode: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(message, options)</span> </span>{
+      message = message || <span class="hljs-string">''</span>;
+      options = getOptions(options, morjs.defaults);
+
+      <span class="hljs-keyword">var</span> mode   = getMode(options.mode);
+      <span class="hljs-keyword">var</span> result = <span class="hljs-string">''</span>;
+      <span class="hljs-keyword">var</span> value  = prepare(message, mode.wordSpacer, mode.letterSpacer, mode.charSpacer);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>Ensure message was prepared successfully.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (!value) {
+        <span class="hljs-keyword">return</span> result;
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>Iterate over each word.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      each(value, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(word, i)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>Insert space between each word.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (i &gt; <span class="hljs-number">0</span>) {
+          result += <span class="hljs-string">' '</span>;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>Iterate over each character of word.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        each(word, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(ch)</span> </span>{
+          <span class="hljs-keyword">var</span> character;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>Reverse engineer pattern for character.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">var</span> pattern = parse(ch, mode.shortString, SHORT, mode.longString, LONG);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>Check if pattern is supported.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">if</span> (pattern) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>Retrieve first character matching the pattern.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            character = getCharacter(pattern);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>Append character if it’s supported.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> character === <span class="hljs-string">'string'</span>) {
+              result += character;
+            }
+          }
+        });
+      });
+
+      <span class="hljs-keyword">return</span> result;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>Encode the <code>message</code> provided in to the Morse code.
+If the <code>mode</code> option is not specified, the default mode will be used.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    encode: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(message, options)</span> </span>{
+      message = message || <span class="hljs-string">''</span>;
+      options = getOptions(options, morjs.defaults);
+
+      <span class="hljs-keyword">var</span> mode   = getMode(options.mode);
+      <span class="hljs-keyword">var</span> result = <span class="hljs-string">''</span>;
+      <span class="hljs-keyword">var</span> value  = prepare(message, <span class="hljs-string">'\\s+'</span>, <span class="hljs-string">''</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>Ensure message was prepared successfully.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (!value) {
+        <span class="hljs-keyword">return</span> result;
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p>Iterate over each word.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      each(value, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(word, i)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p>Insert medium gap between each word.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (i &gt; <span class="hljs-number">0</span>) {
+          result += mode.wordSpacer;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>Iterate over each character of word</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        each(word, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(character, j)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>Insert short gap between each letter.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">if</span> (j &gt; <span class="hljs-number">0</span>) {
+            result += mode.letterSpacer;
+          }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p>Retrieve first character matching the character.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">var</span> pattern = getPattern(character);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <p>Parse pattern for character if it’s supported.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> pattern === <span class="hljs-string">'string'</span>) {
+            result += parse(pattern, SHORT, mode.shortString, LONG, mode.longString, mode.charSpacer);
+          }
+        });
+      });
+
+      <span class="hljs-keyword">return</span> result;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <h2 id="utility-functions">Utility functions</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p>Run mor.js in <em>noConflict</em> mode, returning the <code>morjs</code> variable to its previous owner.
+Returns a reference to <code>morjs</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    noConflict: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      root.morjs = previousMorjs;
+
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    }
+
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-65">&#182;</a>
+              </div>
+              <p>Export <code>morjs</code> for NodeJS and CommonJS.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> exports !== <span class="hljs-string">'undefined'</span>) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">module</span> !== <span class="hljs-string">'undefined'</span> &amp;&amp; <span class="hljs-built_in">module</span>.exports) {
+      exports = <span class="hljs-built_in">module</span>.exports = morjs;
+    }
+
+    exports.morjs = morjs;
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> define === <span class="hljs-string">'function'</span> &amp;&amp; define.amd) {
+    define(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> morjs;
+    });
+  } <span class="hljs-keyword">else</span> {
+    root.morjs = morjs;
+  }
+
+})(<span class="hljs-keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
