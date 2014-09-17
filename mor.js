@@ -86,9 +86,10 @@
   // Parse a string by replacing any instances of the queries provided with their corresponding replacement strings.
   var parse = function(str, query1, replacement1, query2, replacement2, spacer) {
     var hasSpacer = typeof spacer === 'string';
+    var rQuery    = new RegExp('(' + query1 + '|' + query2 + ')', 'g');
     var result    = '';
 
-    each(str, function(substr, i) {
+    each(str.match(rQuery), function(substr, i) {
       // Insert spacer if provided and not first loop.
       if (hasSpacer && i > 0) {
         result += spacer;
@@ -113,7 +114,8 @@
     }
 
     var hasCharSplitter = typeof charSplitter !== 'undefined';
-    var result          = str.trim().split(wordSplitter);
+    var rWordSplitter   = new RegExp(wordSplitter + '|[\\n\\r]+', 'g');
+    var result          = str.trim().split(rWordSplitter);
 
     each(result, function(word, i) {
       result[i] = word = word.split(letterSplitter);
@@ -284,7 +286,7 @@
       letterSpacer:        '\u0020',     /* Space                   */
       longString:          '\u002D',     /* Hyphen-minus            */
       shortString:         '\u002E',     /* Full stop               */
-      wordSpacer:          '\n'          /* Line feed               */
+      wordSpacer:   repeat('\u0020', 3)  /* Space (x3)              */
     }
   };
 
@@ -371,7 +373,7 @@
 
       var mode   = getMode(options.mode);
       var result = '';
-      var value  = prepare(message, /\s+/, '');
+      var value  = prepare(message, '\\s+', '');
 
       // Ensure message was prepared successfully.
       if (!value) {
