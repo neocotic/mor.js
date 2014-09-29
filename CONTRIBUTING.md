@@ -37,4 +37,4 @@ others.
 [2]: https://github.com/neocotic/mor.js/issues/new
 [3]: http://nodejs.org
 [4]: http://gruntjs.com
-[5]: [7]: https://github.com/neocotic/mor.js/blob/master/AUTHORS.md
+[5]: https://github.com/neocotic/mor.js/blob/master/AUTHORS.md
