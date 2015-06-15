@@ -37,7 +37,7 @@
     "grunt-docco": "^0.3.3",
     "grunt-mocha-test": "^0.11.0"
   },
-  "main": "mor.js",
+  "main": "lib/mor.js",
   "scripts": {
     "test": "grunt test"
   }

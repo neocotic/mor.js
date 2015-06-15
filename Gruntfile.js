@@ -14,14 +14,14 @@ module.exports = function(grunt) {
         options: {
           output: 'docs'
         },
-        src: 'mor.js'
+        src: 'lib/mor.js'
       }
     },
 
     jshint: {
       main: [
         'Gruntfile.js',
-        'mor.js'
+        'lib/**/*.js'
       ],
       test: {
         files: {
@@ -78,24 +78,24 @@ module.exports = function(grunt) {
     uglify: {
       all: {
         files: {
-          'mor.min.js': 'mor.js'
+          'dist/mor.min.js': 'lib/mor.js'
         },
         options: {
-          banner: (
-            '/*! <%= pkg.name %> v<%= pkg.version %> | (c) <%= grunt.template.today("yyyy") %>' +
-            ' <%= pkg.author.name %> | <%= pkg.licenses[0].type %> License\n' +
+          banner: [
+            '/*! <%= pkg.name %> v<%= pkg.version %> | (c) <%= grunt.template.today("yyyy") %>',
+            ' <%= pkg.author.name %> | <%= pkg.licenses[0].type %> License\n',
             '*/'
-          ),
+          ].join(''),
           report: 'min',
           sourceMap: true,
-          sourceMapName: 'mor.min.map'
+          sourceMapName: 'dist/mor.min.map'
         }
       }
     },
 
     watch: {
       all: {
-        files: '**/*.js',
+        files: 'lib/**/*.js',
         tasks: ['test']
       }
     }
