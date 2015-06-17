@@ -6,7 +6,10 @@ var fs = require('fs');
 var path = require('path');
 
 // Load internal dependencies.
-var morjs = require('../mor.js');
+var morjs = require('../lib/mor.js');
+
+// Regular expression used to find and replace EOL characters.
+var rEOL = /[\n\r]+/g;
 
 // Load the contents of a text fixture asynchronously.
 var loadFixture = function(filePath, callback) {
@@ -37,7 +40,7 @@ describe('morjs', function() {
       expect(morjs.chars).not.to.be.empty();
 
       loadFixture('characters.txt', function(characters) {
-        expect(morjs.chars).to.only.have.keys(characters.split(/\n/g));
+        expect(morjs.chars).to.only.have.keys(characters.split(rEOL));
 
         done();
       });
@@ -182,7 +185,7 @@ describe('morjs', function() {
     it('should decode all characters correctly', function(done) {
       loadFixture('encoded.txt', function(encoded) {
         loadFixture('decoded.txt', function(decoded) {
-          expect(morjs.decode(encoded)).to.be(decoded.replace(/\n/g, ' '));
+          expect(morjs.decode(encoded)).to.be(decoded.replace(rEOL, ' '));
 
           done();
         });
@@ -379,7 +382,7 @@ describe('morjs', function() {
     it('should encode all characters correctly', function(done) {
       loadFixture('encoded.txt', function(encoded) {
         loadFixture('characters.txt', function(characters) {
-          expect(morjs.encode(characters)).to.be(encoded.replace(/\n/g, morjs.modes.compact.wordSpacer));
+          expect(morjs.encode(characters)).to.be(encoded.replace(rEOL, morjs.modes.compact.wordSpacer));
 
           done();
         });
