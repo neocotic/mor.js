@@ -12,7 +12,7 @@
 [mor.js][0] is a pure JavaScript library for encoding/decoding [Morse code][3] messages that supports extensible
 characters and encoding output.
 
-[![Build Status](https://img.shields.io/travis/neocotic/mor.js/develop.svg?style=flat-square)][1]
+[![Build Status](https://img.shields.io/codeship/af89a730-f72d-0132-2d2a-2ab52ec32728/develop.svg?style=flat-square)][1]
 [![Dependency Status](https://img.shields.io/david/neocotic/mor.js.svg?style=flat-square)][4]
 [![Dev Dependency Status](https://img.shields.io/david/dev/neocotic/mor.js.svg?style=flat-square)][5]
 [![License](https://img.shields.io/github/license/neocotic/mor.js.svg?style=flat-square)][10]
@@ -175,7 +175,7 @@ Copyright (c) 2014 Alasdair Mercer
 See [LICENSE.md][10] for more information on our MIT license.
 
 [0]: http://neocotic.com/mor.js
-[1]: https://travis-ci.org/neocotic/mor.js
+[1]: https://codeship.com/projects/86278
 [2]: https://twitter.com/neocotic
 [3]: https://en.wikipedia.org/wiki/Morse_code
 [4]: https://david-dm.org/neocotic/mor.js
