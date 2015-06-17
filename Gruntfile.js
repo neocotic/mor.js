@@ -1,9 +1,5 @@
 module.exports = function(grunt) {
-
   'use strict';
-
-  // Configuration
-  // -------------
 
   grunt.initConfig({
 
@@ -18,53 +14,12 @@ module.exports = function(grunt) {
       }
     },
 
-    jshint: {
-      main: [
+    eslint: {
+      target: [
         'Gruntfile.js',
-        'lib/**/*.js'
-      ],
-      test: {
-        files: {
-          src: ['test/**/*.js']
-        },
-        options: {
-          globals:      {
-            after:      false,
-            afterEach:  false,
-            before:     false,
-            beforeEach: false,
-            describe:   false,
-            it:         false
-          },
-          globalstrict: true,
-          strict:       false
-        }
-      },
-      options: {
-        boss:      true,
-        browser:   true,
-        camelcase: true,
-        curly:     true,
-        devel:     false,
-        eqeqeq:    true,
-        expr:      true,
-        globals:   {
-          define: false,
-          self:   false
-        },
-        immed:     true,
-        latedef:   true,
-        laxcomma:  false,
-        maxlen:    120,
-        newcap:    true,
-        noarg:     true,
-        node:      true,
-        nonew:     true,
-        quotmark:  'single',
-        strict:    true,
-        undef:     true,
-        unused:    true
-      }
+        'lib/**/*.js',
+        'test/**/*.js'
+      ]
     },
 
     mochaTest: {
@@ -103,17 +58,13 @@ module.exports = function(grunt) {
 
   });
 
-  // Tasks
-  // -----
-
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-docco');
+  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-mocha-test');
 
-  grunt.registerTask('default', [ 'test' ]);
-  grunt.registerTask('dist', [ 'test', 'uglify', 'docco' ]);
-  grunt.registerTask('test', [ 'jshint', 'mochaTest' ]);
-
+  grunt.registerTask('default', ['test']);
+  grunt.registerTask('dist', ['test', 'uglify', 'docco']);
+  grunt.registerTask('test', ['eslint', 'mochaTest']);
 };
