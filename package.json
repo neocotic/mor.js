@@ -31,16 +31,28 @@
   "devDependencies": {
     "expect.js": "^0.3.1",
     "grunt": "^0.4.5",
+    "grunt-blanket": "^0.0.8",
     "grunt-cli": "^0.1.13",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-coveralls": "^1.0.0",
     "grunt-docco": "^0.3.3",
     "grunt-eslint": "^15.0.0",
     "grunt-mocha-test": "^0.12.7",
-    "q": "^1.4.1"
+    "mocha-lcov-reporter": "^0.0.2",
+    "q": "^1.4.1",
+    "travis-cov": "^0.2.5"
   },
   "main": "lib/mor.js",
   "scripts": {
+    "coveralls": "grunt coveralls",
     "test": "grunt test"
+  },
+  "config": {
+    "travis-cov": {
+      "threshold": 95
+    }
   }
 }

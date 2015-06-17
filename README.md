@@ -13,6 +13,7 @@
 characters and encoding output.
 
 [![Build Status](https://img.shields.io/codeship/af89a730-f72d-0132-2d2a-2ab52ec32728/develop.svg?style=flat-square)][1]
+[![Test Coverage](https://img.shields.io/coveralls/neocotic/mor.js/develop.svg?style=flat-square)][11]
 [![Dependency Status](https://img.shields.io/david/neocotic/mor.js.svg?style=flat-square)][4]
 [![Dev Dependency Status](https://img.shields.io/david/dev/neocotic/mor.js.svg?style=flat-square)][5]
 [![License](https://img.shields.io/github/license/neocotic/mor.js.svg?style=flat-square)][10]
@@ -185,3 +186,4 @@ See [LICENSE.md][10] for more information on our MIT license.
 [8]: https://github.com/neocotic/mor.js/blob/master/AUTHORS.md
 [9]: https://github.com/neocotic/mor.js/blob/master/CONTRIBUTING.md
 [10]: https://github.com/neocotic/mor.js/blob/master/LICENSE.md
+[11]: https://coveralls.io/r/neocotic/mor.js
