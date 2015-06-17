@@ -2,8 +2,9 @@ dist/
 docs/
 test/
 
+.editorconfig
+.gitattributes
 .gitignore
-.travis.yml
 AUTHORS.md
 bower.json
 CHANGES.md

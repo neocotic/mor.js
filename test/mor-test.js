@@ -15,11 +15,11 @@ var rEOL = /[\n\r]+/g;
 var loadFixture = function(filePath, callback) {
   filePath = path.join('test', 'fixtures', filePath);
 
-  fs.readFile(filePath, {encoding: 'utf8'}, function(error, data) {
+  fs.readFile(filePath, {encoding: 'utf8'}, function(error, fixture) {
     if (error) {
       throw error;
     } else {
-      callback(data);
+      callback(fixture.trim());
     }
   });
 };
