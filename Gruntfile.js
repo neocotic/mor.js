@@ -46,6 +46,7 @@ module.exports = function(grunt) {
     eslint: {
       target: [
         'Gruntfile.js',
+        'bin/morjs',
         'lib/**/*.js',
         'test/**/*.js'
       ]

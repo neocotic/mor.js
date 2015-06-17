@@ -47,6 +47,26 @@ optional themselves):
 | ------ | -------------------------------------------- | ------------ |
 | mode   | Mode to be used to encode/decode the message | `"comptact"` |
 
+### Command Line
+
+If you installed `morjs` globally using npm you can use this libraries built-in command line interface:
+
+```
+Usage: morjs [options] [command]
+
+
+Commands:
+
+  decode <message>  decodes the encoded Morse code message
+  encode <message>  encodes the message using the Morse code
+
+Options:
+
+  -h, --help         output usage information
+  -V, --version      output the version number
+  -m, --mode [name]  name of the mode to be used
+```
+
 ### `encode(message[, options])`
 
 Encodes the `message` parameter using the Morse code.
