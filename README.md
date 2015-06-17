@@ -1,18 +1,22 @@
-                                __
-      ___ ___     ___   _ __   /\_\    ____
-    /' __` __`\  / __`\/\`'__\ \/\ \  /',__\
-    /\ \/\ \/\ \/\ \L\ \ \ \/__ \ \ \/\__, `\
-    \ \_\ \_\ \_\ \____/\ \_\\_\_\ \ \/\____/
-     \/_/\/_/\/_/\/___/  \/_//_/\ \_\ \/___/
-                               \ \____/
-                                \/___/
+```
+                            __
+  ___ ___     ___   _ __   /\_\    ____
+/' __` __`\  / __`\/\`'__\ \/\ \  /',__\
+/\ \/\ \/\ \/\ \L\ \ \ \/__ \ \ \/\__, `\
+\ \_\ \_\ \_\ \____/\ \_\\_\_\ \ \/\____/
+ \/_/\/_/\/_/\/___/  \/_//_/\ \_\ \/___/
+                           \ \____/
+                            \/___/
+```
 
 [mor.js][0] is a pure JavaScript library for encoding/decoding [Morse code][3] messages that supports extensible
 characters and encoding output.
 
-[![Build Status](https://travis-ci.org/neocotic/mor.js.svg?branch=develop)][1]
-[![Dependency Status](https://gemnasium.com/neocotic/mor.js.svg)][4]
-[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)][5]
+[![Build Status](https://img.shields.io/travis/neocotic/mor.js/develop.svg?style=flat-square)][1]
+[![Dependency Status](https://img.shields.io/david/neocotic/mor.js.svg?style=flat-square)][4]
+[![Dev Dependency Status](https://img.shields.io/david/dev/neocotic/mor.js.svg?style=flat-square)][5]
+[![License](https://img.shields.io/github/license/neocotic/mor.js.svg?style=flat-square)][10]
+[![Release](https://img.shields.io/github/tag/neocotic/mor.js.svg?style=flat-square)][5]
 
 ## Install
 
@@ -24,8 +28,6 @@ $ npm install morjs
 # OR; for the browser:
 $ bower install morjs
 ```
-
-This library has no dependencies on any other library.
 
 ## Usage
 
@@ -49,7 +51,8 @@ optional themselves):
 Encodes the `message` parameter using the Morse code.
 
 ``` javascript
-console.log(morjs.encode('SOS', {mode: 'simple'})); // "... --- ..."
+morjs.encode('SOS', {mode: 'simple'});
+//=> "... --- ..."
 ```
 
 ### `decode(message[, options])`
@@ -57,7 +60,8 @@ console.log(morjs.encode('SOS', {mode: 'simple'})); // "... --- ..."
 Decodes the encoded Morse code `message` parameter.
 
 ``` javascript
-console.log(morjs.decode('... --- ...', {mode: 'simple'})); // "SOS"
+morjs.decode('... --- ...', {mode: 'simple'});
+//=> "SOS"
 ```
 
 ### Customization
@@ -70,7 +74,8 @@ any of them.
 ``` javascript
 morjs.defaults.mode = 'simple';
 
-console.log(morjs.encode('SOS')); // "... --- ..."
+morjs.encode('SOS');
+//=> "... --- ..."
 ```
 
 #### `chars`
@@ -86,7 +91,8 @@ added using a made-up pattern:
 ``` javascript
 morjs.chars['\u039B'] = 'LLLLLSSSSS';
 
-console.log(morjs.encode('\u039B', {mode: 'simple'})); // "-----....."
+morjs.encode('\u039B', {mode: 'simple'});
+//=> "-----....."
 ```
 
 #### `modes`
@@ -117,13 +123,16 @@ morjs.modes.foo = {
 
 var options = {mode: 'foo'};
 
-console.log(morjs.encode('SOS', options));         // "OOO FFF OOO"
-console.log(morjs.decode('OOO FFF OOO', options)); // "SOS"
+morjs.encode('SOS', options);
+//=> "OOO FFF OOO"
+morjs.decode('OOO FFF OOO', options);
+//=> "SOS"
 ```
 
 ### Miscellaneous
 
 #### `noConflict()`
+
 Returns `morjs` in a no-conflict state, reallocating the `morjs` global variable name to its previous owner, where
 possible.
 
@@ -139,37 +148,40 @@ This is really just intended for use within a browser.
 ```
 
 #### `VERSION`
+
 The current version of `morjs`.
 
 ``` javascript
-console.log(morjs.VERSION); // "1.1.0"
+morjs.VERSION;
+//=> "1.1.0"
 ```
 
 ## Bugs
 
 If you have any problems with this library or would like to see changes currently in development you can do so
-[here][6].
+[here][7].
 
 ## Contributors
 
-If you want to contribute, you're a legend! Information on how you can do so can be found in [CONTRIBUTING.md][8]. We
+If you want to contribute, you're a legend! Information on how you can do so can be found in [CONTRIBUTING.md][9]. We
 want your suggestions and pull requests!
 
-A list of [mor.js][0] contributors can be found in [AUTHORS.md][7].
+A list of [mor.js][0] contributors can be found in [AUTHORS.md][8].
 
 ## License
 
 Copyright (c) 2014 Alasdair Mercer
 
-See [LICENSE.md][9] for more information on our MIT license.
+See [LICENSE.md][10] for more information on our MIT license.
 
 [0]: http://neocotic.com/mor.js
 [1]: https://travis-ci.org/neocotic/mor.js
 [2]: https://twitter.com/neocotic
 [3]: https://en.wikipedia.org/wiki/Morse_code
-[4]: https://gemnasium.com/neocotic/mor.js
-[5]: http://gruntjs.com
-[6]: https://github.com/neocotic/mor.js/issues
-[7]: https://github.com/neocotic/mor.js/blob/master/AUTHORS.md
-[8]: https://github.com/neocotic/mor.js/blob/master/CONTRIBUTING.md
-[9]: https://github.com/neocotic/mor.js/blob/master/LICENSE.md
+[4]: https://david-dm.org/neocotic/mor.js
+[5]: https://david-dm.org/neocotic/mor.js#info=devDependencies
+[6]: https://github.com/neocotic/mor.js
+[7]: https://github.com/neocotic/mor.js/issues
+[8]: https://github.com/neocotic/mor.js/blob/master/AUTHORS.md
+[9]: https://github.com/neocotic/mor.js/blob/master/CONTRIBUTING.md
+[10]: https://github.com/neocotic/mor.js/blob/master/LICENSE.md
