@@ -3,6 +3,8 @@ docs/
 test/
 
 .editorconfig
+.eslintignore
+.eslintrc
 .gitattributes
 .gitignore
 AUTHORS.md
