@@ -29,12 +29,12 @@ module.exports = function(grunt) {
         },
         options: {
           globals:      {
-            after:      true,
-            afterEach:  true,
-            before:     true,
-            beforeEach: true,
-            describe:   true,
-            it:         true
+            after:      false,
+            afterEach:  false,
+            before:     false,
+            beforeEach: false,
+            describe:   false,
+            it:         false
           },
           globalstrict: true,
           strict:       false
@@ -49,7 +49,8 @@ module.exports = function(grunt) {
         eqeqeq:    true,
         expr:      true,
         globals:   {
-          define: true
+          define: false,
+          self:   false
         },
         immed:     true,
         latedef:   true,
