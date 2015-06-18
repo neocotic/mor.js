@@ -7,10 +7,19 @@ var q = require('q');
 
 var morjs = require('../lib/mor');
 
-// Regular expression used to find and replace EOL characters.
+/**
+ * The regular expression used to find and replace EOL characters.
+ *
+ * @type {RegExp}
+ */
 var rEOL = /[\n\r]+/g;
 
-// Load the contents of a text fixture asynchronously.
+/**
+ * Loads the contents of a test fixture asynchronously.
+ *
+ * @param {String} filePath - the path to the file of the test fixture to be loaded
+ * @returns {q.Promise} A promise to track the file loading.
+ */
 function loadFixture(filePath) {
   filePath = path.join('test', 'fixtures', filePath);
 
@@ -170,8 +179,14 @@ describe('morjs', function() {
       expect(morjs.decode('  \n  \r  ')).to.be('');
     });
 
-    it('should throw an error if message is not a string', function() {
-      expect(morjs.decode).withArgs(true).to.throwError();
+    it('should convert message to string', function() {
+      function ToString() {
+        this.toString = function() {
+          return '\u00B7\u002D';
+        };
+      }
+
+      expect(morjs.decode(new ToString())).to.be('A');
     });
 
     it('should throw an error if mode does not exist', function() {
@@ -365,8 +380,14 @@ describe('morjs', function() {
       expect(morjs.encode('foo')).to.be(morjs.encode('FOO'));
     });
 
-    it('should throw an error if message is not a string', function() {
-      expect(morjs.encode).withArgs(true).to.throwError();
+    it('should convert message to string', function() {
+      function ToString() {
+        this.toString = function() {
+          return 'A';
+        };
+      }
+
+      expect(morjs.encode(new ToString())).to.be('\u00B7\u002D');
     });
 
     it('should throw an error if mode does not exist', function() {

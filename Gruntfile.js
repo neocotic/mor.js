@@ -34,15 +34,6 @@ module.exports = function(grunt) {
       }
     },
 
-    docco: {
-      all: {
-        options: {
-          output: 'docs'
-        },
-        src: 'lib/mor.js'
-      }
-    },
-
     eslint: {
       target: [
         'Gruntfile.js',
@@ -50,6 +41,15 @@ module.exports = function(grunt) {
         'lib/**/*.js',
         'test/**/*.js'
       ]
+    },
+
+    jsdoc: {
+      dist: {
+        options: {
+          destination: 'docs'
+        },
+        src: ['lib/**/*.js']
+      }
     },
 
     mochaTest: {
@@ -116,11 +116,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-coveralls');
-  grunt.loadNpmTasks('grunt-docco');
   grunt.loadNpmTasks('grunt-eslint');
+  grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-mocha-test');
 
   grunt.registerTask('default', ['test']);
-  grunt.registerTask('dist', ['test', 'clean:dist', 'uglify', 'docco']);
+  grunt.registerTask('dist', ['test', 'clean:dist', 'uglify', 'jsdoc']);
   grunt.registerTask('test', ['eslint', 'clean:coverage', 'blanket', 'copy:coverage', 'mochaTest']);
 };

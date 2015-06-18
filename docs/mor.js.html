@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: mor.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: mor.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * Library for encoding/decoding Morse code messages that supports extensible characters and encoding output.
  *
  * @module morjs
@@ -10,22 +38,22 @@
   'use strict';
 
   /**
-   * The root object that has been determined for the current environment (browser, server, <code>WebWorker</code>).
+   * The root object that has been determined for the current environment (browser, server, &lt;code>WebWorker&lt;/code>).
    *
    * @access private
    * @type {*}
    */
-  var root = (typeof self === 'object' && self.self === self && self) ||
-      (typeof global === 'object' && global.global === global && global);
+  var root = (typeof self === 'object' &amp;&amp; self.self === self &amp;&amp; self) ||
+      (typeof global === 'object' &amp;&amp; global.global === global &amp;&amp; global);
 
-  if (typeof define === 'function' && define.amd) {
+  if (typeof define === 'function' &amp;&amp; define.amd) {
     // Defines for AMD but also exports to root for those expecting global morjs
     define(function() {
       root.morjs = factory(root);
 
       return root.morjs;
     });
-  } else if (typeof module !== 'undefined' && module.exports) {
+  } else if (typeof module !== 'undefined' &amp;&amp; module.exports) {
     // Supports Node.js and the CommonJS patterns
     exports = module.exports = factory(root);
   } else {
@@ -72,7 +100,7 @@
   var shortPlaceholder = 'S';
 
   /**
-   * The main <code>morjs</code> object to be exported.
+   * The main &lt;code>morjs&lt;/code> object to be exported.
    *
    * @access public
    * @type {Object}
@@ -81,7 +109,7 @@
   var morjs = {};
 
   /**
-   * The previous value of the <code>morjs</code> variable.
+   * The previous value of the &lt;code>morjs&lt;/code> variable.
    *
    * @access private
    * @type {*}
@@ -89,13 +117,13 @@
   var previousMorjs = root.morjs;
 
   /**
-   * Iterates over a given <code>list</code>.
-   * <p/>
-   * Each element is yielded in turn to the specified <code>iterator</code> function.
+   * Iterates over a given &lt;code>list&lt;/code>.
+   * &lt;p/>
+   * Each element is yielded in turn to the specified &lt;code>iterator&lt;/code> function.
    *
    * @param {Array} [list] - the array to be iterated over
    * @param {Function} iterator - the iterator function to be passed index/element
-   * @returns {Array} The specified <code>list</code>.
+   * @returns {Array} The specified &lt;code>list&lt;/code>.
    * @access private
    */
   function each(list, iterator) {
@@ -105,16 +133,16 @@
 
     var length = list.length;
 
-    for (var index = 0; index < length; index++) {
+    for (var index = 0; index &lt; length; index++) {
       iterator(list[index], index, list);
     }
   }
 
   /**
-   * Returns the character mapped to the specified <code>pattern</code>, where possible.
+   * Returns the character mapped to the specified &lt;code>pattern&lt;/code>, where possible.
    *
    * @param {String} pattern - the pattern for which the character is to be looked up
-   * @returns {String} The character mapped to <code>pattern</code> or <code>undefined</code> if there is none.
+   * @returns {String} The character mapped to &lt;code>pattern&lt;/code> or &lt;code>undefined&lt;/code> if there is none.
    * @access private
    */
   function getCharacter(pattern) {
@@ -123,7 +151,7 @@
     var character;
 
     for (var key in morjs.chars) {
-      if (morjs.chars.hasOwnProperty(key) && morjs.chars[key] === pattern) {
+      if (morjs.chars.hasOwnProperty(key) &amp;&amp; morjs.chars[key] === pattern) {
         character = key;
         break;
       }
@@ -134,13 +162,13 @@
   }
 
   /**
-   * Returns the given <code>options</code> with all of the <code>defaults</code> applied.
-   * <p/>
-   * This function <i>will change</i> the specified <code>options</code>.
+   * Returns the given &lt;code>options&lt;/code> with all of the &lt;code>defaults&lt;/code> applied.
+   * &lt;p/>
+   * This function &lt;i>will change&lt;/i> the specified &lt;code>options&lt;/code>.
    *
    * @param {MorjsOptions} [options={}] - the options to be extended
    * @param {MorjsOptions} defaults - the default options
-   * @returns {MorjsOptions} The specified <code>options</code> with modifications.
+   * @returns {MorjsOptions} The specified &lt;code>options&lt;/code> with modifications.
    * @access private
    */
   function getOptions(options, defaults) {
@@ -156,10 +184,10 @@
   }
 
   /**
-   * Returns the pattern mapped to the specified <code>character</code>, where possible.
+   * Returns the pattern mapped to the specified &lt;code>character&lt;/code>, where possible.
    *
    * @param {String} character - the character for which the pattern is to be looked up
-   * @returns {String} The pattern mapped to <code>character</code> or <code>undefined</code> if there is none.
+   * @returns {String} The pattern mapped to &lt;code>character&lt;/code> or &lt;code>undefined&lt;/code> if there is none.
    * @access private
    */
   function getPattern(character) {
@@ -172,10 +200,10 @@
    *
    * @param {String} str - the string to be parsed
    * @param {String} shortSearch - the string to search for short placeholder/patterns (will be passed to
-   * <code>RegExp</code> constructor)
+   * &lt;code>RegExp&lt;/code> constructor)
    * @param {String} shortReplacement - the string to replace short placeholder/patterns
    * @param {String} longSearch - the string to search for long placeholder/patterns (will be passed to
-   * <code>RegExp</code> constructor)
+   * &lt;code>RegExp&lt;/code> constructor)
    * @param {String} longReplacement - the string to replace long placeholder/patterns
    * @param {String} [spacer] - the string to be inserted between matches
    * @returns {String} The parsed string with all search queries replaced.
@@ -188,7 +216,7 @@
 
     each(str.match(rQuery), function(substr, i) {
       // Inserts spacer if provided and not first loop
-      if (hasSpacer && i > 0) {
+      if (hasSpacer &amp;&amp; i > 0) {
         result += spacer;
       }
 
@@ -207,11 +235,11 @@
    * Prepares a given string to simplify encoding/decoding.
    *
    * @param {String} str - the string to prepare
-   * @param {String} wordSplitter - the string used to split words (will be passed to <code>RegExp</code> constructor)
+   * @param {String} wordSplitter - the string used to split words (will be passed to &lt;code>RegExp&lt;/code> constructor)
    * @param {String} letterSplitter - the string used to split alphabetic letters
    * @param {String} [charSplitter] - the string used to split characters (for decoding only)
-   * @returns {Array.<Array.<String>>|Array.<Array.<Array<String>>>} A multi-dimensional array of words and their
-   * alphabetic letters (and even characters if <code>charSplitter</code> is provided) contained within.
+   * @returns {Array.&lt;Array.&lt;String>>|Array.&lt;Array.&lt;Array&lt;String>>>} A multi-dimensional array of words and their
+   * alphabetic letters (and even characters if &lt;code>charSplitter&lt;/code> is provided) contained within.
    * @access private
    */
   function prepare(str, wordSplitter, letterSplitter, charSplitter) {
@@ -233,15 +261,15 @@
   }
 
   /**
-   * Repeats a given string the specified number of <code>times</code>.
+   * Repeats a given string the specified number of &lt;code>times&lt;/code>.
    *
    * @param {String} str - the string to be repeated
-   * @param {Number} times - the number of times to repeat <code>str</code>
-   * @returns {String} <code>str</code> repeated the number of <code>times</code> provided.
+   * @param {Number} times - the number of times to repeat &lt;code>str&lt;/code>
+   * @returns {String} &lt;code>str&lt;/code> repeated the number of &lt;code>times&lt;/code> provided.
    * @access private
    */
   function repeat(str, times) {
-    for (var index = 0, result = ''; index < times; index++) {
+    for (var index = 0, result = ''; index &lt; times; index++) {
       result += str;
     }
 
@@ -263,7 +291,7 @@
    *
    * @access public
    * @static
-   * @type {Object.<String, String>}
+   * @type {Object.&lt;String, String>}
    */
   morjs.chars = {
                          // Letters
@@ -372,12 +400,12 @@
    *
    * @access public
    * @static
-   * @type {Object.<String, MorjsMode>}
+   * @type {Object.&lt;String, MorjsMode>}
    * @property {MorjsMode} classic - The classic "dot" and "dash" output.
-   * @property {MorjsMode} classicEntities - Same as the <code>classic</code> mode except outputs XML entities instead
+   * @property {MorjsMode} classicEntities - Same as the &lt;code>classic&lt;/code> mode except outputs XML entities instead
    * of unicode characters.
-   * @property {MorjsMode} compact - Compact version of the <code>classic</code> mode with reduced whitespace.
-   * @property {MorjsMode} compactEntities - Compact version of the <oode>classicEntities</code> mode with reduced
+   * @property {MorjsMode} compact - Compact version of the &lt;code>classic&lt;/code> mode with reduced whitespace.
+   * @property {MorjsMode} compactEntities - Compact version of the &lt;oode>classicEntities&lt;/code> mode with reduced
    * whitespace.
    * @property {MorjsMode} simple - Simple output using a plain hyphen and full stop mixed using a single space to
    * split letters and a new line for words.
@@ -391,28 +419,28 @@
       wordSpacer: repeat('\u0020', 7)    // Space (x7)
     },
     classicEntities: {
-      charSpacer: '&nbsp;',              // Non-breaking space
-      letterSpacer: repeat('&nbsp;', 3), // Non-breaking space (x3)
-      longString: '&#45;',               // Hyphen-minus
-      shortString: '&middot;',           // Middle dot
-      wordSpacer: repeat('&nbsp;', 7)    // Non-breaking space (x7)
+      charSpacer: '&amp;nbsp;',              // Non-breaking space
+      letterSpacer: repeat('&amp;nbsp;', 3), // Non-breaking space (x3)
+      longString: '&amp;#45;',               // Hyphen-minus
+      shortString: '&amp;middot;',           // Middle dot
+      wordSpacer: repeat('&amp;nbsp;', 7)    // Non-breaking space (x7)
     },
     compact: {
-      charSpacer: '',                    // <Empty>
+      charSpacer: '',                    // &lt;Empty>
       letterSpacer: '\u0020',            // Space
       longString: '\u002D',              // Hyphen-minus
       shortString: '\u00B7',             // Middle dot
       wordSpacer: repeat('\u0020', 3)    // Space (x3)
     },
     compactEntities: {
-      charSpacer: '',                    // <Empty>
-      letterSpacer: '&nbsp;',            // Non-breaking space
-      longString: '&#45;',               // Hyphen-minus
-      shortString: '&middot;',           // Middle dot
-      wordSpacer: repeat('&nbsp;', 3)    // Non-breaking space (x3)
+      charSpacer: '',                    // &lt;Empty>
+      letterSpacer: '&amp;nbsp;',            // Non-breaking space
+      longString: '&amp;#45;',               // Hyphen-minus
+      shortString: '&amp;middot;',           // Middle dot
+      wordSpacer: repeat('&amp;nbsp;', 3)    // Non-breaking space (x3)
     },
     simple: {
-      charSpacer: '',                    // <Empty>
+      charSpacer: '',                    // &lt;Empty>
       letterSpacer: '\u0020',            // Space
       longString: '\u002D',              // Hyphen-minus
       shortString: '\u002E',             // Full stop
@@ -421,14 +449,14 @@
   };
 
   /**
-   * Decodes the <code>message</code> provided from Morse code to a human-readable message.
-   * <p/>
+   * Decodes the &lt;code>message&lt;/code> provided from Morse code to a human-readable message.
+   * &lt;p/>
    * The message may not be decoded correctly if the some of the options used to encode the message originally are not
-   * the same as those in <code>options</code>.
+   * the same as those in &lt;code>options&lt;/code>.
    *
    * @param {String} [message=""] - the Morse code string to be decoded
    * @param {MorjsOptions} [options={}] - the options to be used
-   * @returns {String} The ouput from decoding <code>message</code>.
+   * @returns {String} The ouput from decoding &lt;code>message&lt;/code>.
    * @access public
    * @static
    */
@@ -470,11 +498,11 @@
   };
 
   /**
-   * Encodes the <code>message</code> provided to the Morse code.
+   * Encodes the &lt;code>message&lt;/code> provided to the Morse code.
    *
    * @param {String} [message=""] - the string to be encoded to the Morse code
    * @param {MorjsOptions} [options={}] - the options to be used
-   * @returns {String} The output from encoding <code>message</code>.
+   * @returns {String} The output from encoding &lt;code>message&lt;/code>.
    * @access public
    * @static
    */
@@ -514,7 +542,7 @@
   };
 
   /**
-   * Runs mor.js in <i>no conflict</i> mode, returning the <code>morjs</code> global variable to it's previous owner,
+   * Runs mor.js in &lt;i>no conflict&lt;/i> mode, returning the &lt;code>morjs&lt;/code> global variable to it's previous owner,
    * if any.
    *
    * @returns {Object} A reference to this {@linkcode morjs}.
@@ -529,3 +557,26 @@
 
   return morjs;
 }));
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-morjs.html">morjs</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a> on Thu Jun 18 2015 14:20:00 GMT+0100 (GMT Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
