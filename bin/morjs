@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+
+'use strict';
+
+var program = require('commander');
+var os = require('os');
+
+var morjs = require('../lib/mor');
+
+program
+  .version(morjs.VERSION)
+  .option('-m, --mode [name]', 'name of the mode to be used', morjs.defaults.mode);
+
+function invoke(methodName) {
+  return function(message) {
+    var options = {
+      mode: program.mode
+    };
+
+    process.stdout.write(morjs[methodName](message, options) + os.EOL);
+  };
+}
+
+program
+  .command('decode <message>')
+  .description('decodes the encoded Morse code message')
+  .action(invoke('decode'));
+
+program
+  .command('encode <message>')
+  .description('encodes the message using the Morse code')
+  .action(invoke('encode'));
+
+program.parse(process.argv);
+
+if (!process.argv.slice(2).length) {
+  program.outputHelp();
+}

@@ -1,28 +1,39 @@
 'use strict';
 
-// Load external dependencies.
 var expect = require('expect.js');
 var fs = require('fs');
 var path = require('path');
+var q = require('q');
 
-// Load internal dependencies.
-var morjs = require('../mor.js');
+var morjs = require('../lib/mor');
 
-// Load the contents of a text fixture asynchronously.
-var loadFixture = function(filePath, callback) {
+/**
+ * The regular expression used to find and replace EOL characters.
+ *
+ * @type {RegExp}
+ */
+var rEOL = /[\n\r]+/g;
+
+/**
+ * Loads the contents of a test fixture asynchronously.
+ *
+ * @param {String} filePath - the path to the file of the test fixture to be loaded
+ * @returns {q.Promise} A promise to track the file loading.
+ */
+function loadFixture(filePath) {
   filePath = path.join('test', 'fixtures', filePath);
 
-  fs.readFile(filePath, {encoding: 'utf8'}, function(error, data) {
-    if (error) {
-      throw error;
-    } else {
-      callback(data);
-    }
+  return q.nfcall(fs.readFile, filePath, {encoding: 'utf8'})
+  .then(function(fixture) {
+    return fixture.trim();
   });
-};
+}
 
-// Run test suite.
 describe('morjs', function() {
+  afterEach(function() {
+    delete morjs.modes.foo;
+  });
+
   it('should be exported as an object', function() {
     expect(morjs).to.be.an(Object);
   });
@@ -36,11 +47,12 @@ describe('morjs', function() {
       expect(morjs.chars).to.be.an(Object);
       expect(morjs.chars).not.to.be.empty();
 
-      loadFixture('characters.txt', function(characters) {
-        expect(morjs.chars).to.only.have.keys(characters.split(/\n/g));
-
-        done();
-      });
+      loadFixture('characters.txt')
+      .then(function(characters) {
+        expect(morjs.chars).to.only.have.keys(characters.split(rEOL));
+      })
+      .then(done)
+      .done();
     });
 
     it('should be exensible', function() {
@@ -63,10 +75,6 @@ describe('morjs', function() {
   });
 
   describe('.modes', function() {
-    afterEach(function() {
-      delete morjs.modes.foo;
-    });
-
     it('should return a map of available modes', function() {
       expect(morjs.modes).to.be.an(Object);
       expect(morjs.modes).to.only.have.keys([
@@ -81,55 +89,55 @@ describe('morjs', function() {
     it('should have the "classic" mode correctly defined', function() {
       expect(morjs.modes).to.have.property('classic');
       expect(morjs.modes.classic).to.eql({
-        charSpacer:   '\u0020',
+        charSpacer: '\u0020',
         letterSpacer: '\u0020\u0020\u0020',
-        longString:   '\u002D',
-        shortString:  '\u00B7',
-        wordSpacer:   '\u0020\u0020\u0020\u0020\u0020\u0020\u0020'
+        longString: '\u002D',
+        shortString: '\u00B7',
+        wordSpacer: '\u0020\u0020\u0020\u0020\u0020\u0020\u0020'
       });
     });
 
     it('should have the "classicEntities" mode correctly defined', function() {
       expect(morjs.modes).to.have.property('classicEntities');
       expect(morjs.modes.classicEntities).to.eql({
-        charSpacer:   '&nbsp;',
+        charSpacer: '&nbsp;',
         letterSpacer: '&nbsp;&nbsp;&nbsp;',
-        longString:   '&#45;',
-        shortString:  '&middot;',
-        wordSpacer:   '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+        longString: '&#45;',
+        shortString: '&middot;',
+        wordSpacer: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
       });
     });
 
     it('should have the "compact" mode correctly defined', function() {
       expect(morjs.modes).to.have.property('compact');
       expect(morjs.modes.compact).to.eql({
-        charSpacer:   '',
+        charSpacer: '',
         letterSpacer: '\u0020',
-        longString:   '\u002D',
-        shortString:  '\u00B7',
-        wordSpacer:   '\u0020\u0020\u0020'
+        longString: '\u002D',
+        shortString: '\u00B7',
+        wordSpacer: '\u0020\u0020\u0020'
       });
     });
 
     it('should have the "compactEntities" mode correctly defined', function() {
       expect(morjs.modes).to.have.property('compactEntities');
       expect(morjs.modes.compactEntities).to.eql({
-        charSpacer:   '',
+        charSpacer: '',
         letterSpacer: '&nbsp;',
-        longString:   '&#45;',
-        shortString:  '&middot;',
-        wordSpacer:   '&nbsp;&nbsp;&nbsp;'
+        longString: '&#45;',
+        shortString: '&middot;',
+        wordSpacer: '&nbsp;&nbsp;&nbsp;'
       });
     });
 
     it('should have the "simple" mode correctly defined', function() {
       expect(morjs.modes).to.have.property('simple');
       expect(morjs.modes.simple).to.eql({
-        charSpacer:   '',
+        charSpacer: '',
         letterSpacer: '\u0020',
-        longString:   '\u002D',
-        shortString:  '\u002E',
-        wordSpacer:   '\u0020\u0020\u0020'
+        longString: '\u002D',
+        shortString: '\u002E',
+        wordSpacer: '\u0020\u0020\u0020'
       });
     });
 
@@ -139,11 +147,11 @@ describe('morjs', function() {
       expect(morjs.modes).not.to.have.key('foo');
 
       morjs.modes.foo = {
-        charSpacer:   '',
+        charSpacer: '',
         letterSpacer: '\u0020',
-        longString:   '\u0046',
-        shortString:  '\u004F',
-        wordSpacer:   '\u0020\u0020\u0020'
+        longString: '\u0046',
+        shortString: '\u004F',
+        wordSpacer: '\u0020\u0020\u0020'
       };
 
       expect(morjs.encode('SOS', options)).to.be([
@@ -171,8 +179,14 @@ describe('morjs', function() {
       expect(morjs.decode('  \n  \r  ')).to.be('');
     });
 
-    it('should throw an error if message is not a string', function() {
-      expect(morjs.decode).withArgs(true).to.throwError();
+    it('should convert message to string', function() {
+      function ToString() {
+        this.toString = function() {
+          return '\u00B7\u002D';
+        };
+      }
+
+      expect(morjs.decode(new ToString())).to.be('A');
     });
 
     it('should throw an error if mode does not exist', function() {
@@ -180,13 +194,11 @@ describe('morjs', function() {
     });
 
     it('should decode all characters correctly', function(done) {
-      loadFixture('encoded.txt', function(encoded) {
-        loadFixture('decoded.txt', function(decoded) {
-          expect(morjs.decode(encoded)).to.be(decoded.replace(/\n/g, ' '));
-
-          done();
-        });
-      });
+      q.spread([loadFixture('encoded.txt'), loadFixture('decoded.txt')], function(encoded, decoded) {
+        expect(morjs.decode(encoded)).to.be(decoded.replace(rEOL, ' '));
+      })
+      .then(done)
+      .done();
     });
 
     it('should decode using "compact" mode by default', function() {
@@ -368,8 +380,14 @@ describe('morjs', function() {
       expect(morjs.encode('foo')).to.be(morjs.encode('FOO'));
     });
 
-    it('should throw an error if message is not a string', function() {
-      expect(morjs.encode).withArgs(true).to.throwError();
+    it('should convert message to string', function() {
+      function ToString() {
+        this.toString = function() {
+          return 'A';
+        };
+      }
+
+      expect(morjs.encode(new ToString())).to.be('\u00B7\u002D');
     });
 
     it('should throw an error if mode does not exist', function() {
@@ -377,13 +395,11 @@ describe('morjs', function() {
     });
 
     it('should encode all characters correctly', function(done) {
-      loadFixture('encoded.txt', function(encoded) {
-        loadFixture('characters.txt', function(characters) {
-          expect(morjs.encode(characters)).to.be(encoded.replace(/\n/g, morjs.modes.compact.wordSpacer));
-
-          done();
-        });
-      });
+      q.spread([loadFixture('encoded.txt'), loadFixture('characters.txt')], function(encoded, characters) {
+        expect(morjs.encode(characters)).to.be(encoded.replace(rEOL, morjs.modes.compact.wordSpacer));
+      })
+      .then(done)
+      .done();
     });
 
     it('should encode using "compact" mode by default', function() {

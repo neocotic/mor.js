@@ -25,7 +25,7 @@
     "type": "git",
     "url": "git://github.com/neocotic/mor.js.git"
   },
-  "main": "mor.min.js",
+  "main": "lib/mor.js",
   "ignore": [
     "**/.*",
     "docs",
@@ -34,9 +34,7 @@
     "CHANGES.md",
     "CONTRIBUTING.md",
     "Gruntfile.js",
-    "INSTALL.md",
-    "README.md",
-    "bower.json",
-    "package.json"
+    "package.json",
+    "README.md"
   ]
 }
